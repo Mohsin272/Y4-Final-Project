@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="text-left">
+     Testing the API calls
+<br>
+<br>
+     <form method="post">
+          <div class="form-group w-25">
+            <label for="ingredientsinput">Ingredients</label>
+            <br>
+            <input type="text" class="form-control" id="ingredientsinput" placeholder="Enter ingredients" name="ingredients" >
+            <br>
+            <label for="mealtype">Meal Type (Breakfast/Lunch/Dinner)</label>
+            <br>
+            <input type="text" class="form-control" id="mealtypeinput" placeholder="Enter mealtype" name="mealtype" >
+          </div>
+          <br>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+</div>
+
+{% endblock %}
+    
