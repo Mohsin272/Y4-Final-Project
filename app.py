@@ -29,9 +29,8 @@ def process():
     app_key = 'cb6954f29368c1f234ebc4d102ea0a20	'
     meal_type=request.form["mealtype"]
     ingredients = request.form["ingredients"]
-    num=request.form["numIng"]
-    health='Vegan,Gluten-Free'
-    result = requests.get(f'https://api.edamam.com/search?q={ingredients}&mealType={meal_type}&ingr={int(num)}&app_id={app_id}&app_key={app_key}')
+    health=request.form["dietdropdown"]
+    result = requests.get(f'https://api.edamam.com/search?q={ingredients}&health={health}&mealType={meal_type}&app_id={app_id}&app_key={app_key}')
     data = result.json()
     res=data['hits']
     return render_template("ingredients.html", title="Suggested Recipes ", heading="Your Recipes :)", data=res)

@@ -13,28 +13,22 @@
             <label for="mealtype">Meal Type (Breakfast/Lunch/Dinner)</label>
             <br>
             <input type="text" class="form-control" id="mealtypeinput" placeholder="Enter mealtype" name="mealtype" required >
-            <br>
           </div>
           <br>
-          <div class="btn-group">
-               <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               Action
-               </button>
-               <div class="dropdown-menu">
-               <a class="dropdown-item" href="#">Alcohol-Free</a>
-               <a class="dropdown-item" href="#">Celery-Free</a>
-               <a class="dropdown-item" href="#">Crustcean-Free</a>
-               <a class="dropdown-item" href="#">Dairy-Free</a>
-               <a class="dropdown-item" href="#">Egg-Free</a>
-               <a class="dropdown-item" href="#">Fish-Free</a>
-               <a class="dropdown-item" href="#">Gluten-Free</a>
-               <a class="dropdown-item" href="#">Kosher</a>
-               <a class="dropdown-item" href="#">Peanut-Free</a>
-               <a class="dropdown-item" href="#">Pescatarian</a>
-               <a class="dropdown-item" href="#">Vegan </a>
-               <a class="dropdown-item" href="#">Vegetarian  </a>
-               </div>
-          </div>
+          <label for="dietdropdown">Dietary requirements?</label>
+          <select class="form-select form-select-sm w-25" name="dietdropdown" multiple aria-label="multiple select example">
+               <option value="alcohol-free">Alcohol-Free</option>
+               <option value="celery-free">Celery-Free</option>
+               <option value="crustcean-free">Crustcean-Free</option>
+               <option value="dairy-free">Dairy-Free</option>
+               <option value="egg-free">Egg-Free</option>
+               <option value="gluten-free">Gluten-Free</option>
+               <option value="kosher">Kosher</option>
+               <option value="peanut-free">Peanut-Free</option>
+               <option value="pescatarian">Pescatarian</option>
+               <option value="vegan">Vegan</option>
+               <option value="vegetarian">Vegetarian</option>
+             </select>
           <br>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
