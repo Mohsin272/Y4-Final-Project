@@ -1,0 +1,15 @@
+import requests
+api_key='e989ba4eca774666be46dfb04dfd23f5'
+ingredients = 'apple,pears,butter,bread,flour,milk,eggs,banana,chicken'
+results=requests.get(f'https://api.spoonacular.com/recipes/findByIngredients?apiKey={api_key}&ingredients={ingredients}&ranking=1#')
+res=results.json()
+for row in res:
+    print(row['title'])
+    print(row['missedIngredients'][0]['name'])
+    #print(row['id'])
+    Ingresults=requests.get(f'https://api.spoonacular.com/recipes/{row["id"]}/information?apiKey={api_key}&includeNutrition=true')
+    Ingres=Ingresults.json()
+    #print(Ingres)
+    #for r in Ingres:
+    print(Ingres['extendedIngredients'][0]['name'])
+         #print(r['extendedIngredients'])

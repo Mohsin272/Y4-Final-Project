@@ -1,6 +1,31 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="text-left">
+<div class="text-center"> 
+<div class="row">
+    {% for row in data %}
+    <div class="col-md-3">
+
+        <div class="card text-white bg-dark mb-3" style="width: 20rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{row['recipe']['label']}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Calories:{{row['recipe']['calories']}}</h6>
+                    <p class="card-text"> 
+                        Ingredients:
+                        {% for row in row['recipe']['ingredientLines'] %} 
+                        <br>
+                        {{row}} 
+                        {% endfor %}
+                    </p>
+            </div>
+        </div>
+        
+    </div>
+    {% endfor %}
+</div>
+</div>
+
+
+<!-- <div class="text-left">
     {% for row in data %}    
     <p class="fw-bold text-info">Recipe:</p>{{row['recipe']['label']}}
     <p class="fw-bold">Calories:</p> {{row['recipe']['calories']}}  
@@ -11,7 +36,7 @@
     {% endfor %}
     {% endfor %}
     
-</div>
+</div> -->
 
 {% endblock %}
     

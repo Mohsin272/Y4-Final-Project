@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="text-left">
+    {% for row in data %}    
+    <p class="fw-bold text-info">Recipe:</p>{{row['recipe']['label']}}
+    <p class="fw-bold">Calories:</p> {{row['recipe']['calories']}}  
+    <p class="fw-bold">Ingredients:</p>
+    {% for row in row['recipe']['ingredientLines'] %} 
+    <br>
+    {{row}} 
+    {% endfor %}
+    {% endfor %}
+    
+</div>
+
+{% endblock %}
+    

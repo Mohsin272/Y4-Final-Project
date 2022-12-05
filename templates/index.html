@@ -1,38 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="text-left">
-     Testing the Edamam API calls
-<br>
-<br>
-     <form method="post">
-          <div class="form-group w-25">
-            <label for="ingredientsinput">Ingredients</label>
-            <br>
-            <input type="text" class="form-control" id="ingredientsinput" placeholder="Enter ingredients" name="ingredients" required >
-            <br>
-            <label for="mealtype">Meal Type (Breakfast/Lunch/Dinner)</label>
-            <br>
-            <input type="text" class="form-control" id="mealtypeinput" placeholder="Enter mealtype" name="mealtype" required >
-          </div>
-          <br>
-          <label for="dietdropdown">Dietary requirements?</label>
-          <select class="form-select form-select-sm w-25" name="dietdropdown" multiple aria-label="multiple select example">
-               <option value="alcohol-free">Alcohol-Free</option>
-               <option value="celery-free">Celery-Free</option>
-               <option value="crustcean-free">Crustcean-Free</option>
-               <option value="dairy-free">Dairy-Free</option>
-               <option value="egg-free">Egg-Free</option>
-               <option value="gluten-free">Gluten-Free</option>
-               <option value="kosher">Kosher</option>
-               <option value="peanut-free">Peanut-Free</option>
-               <option value="pescatarian">Pescatarian</option>
-               <option value="vegan">Vegan</option>
-               <option value="vegetarian">Vegetarian</option>
-             </select>
-          <br>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+<div class="d-flex justify-content-center">
+<a href="/edamam" class="btn btn-dark">Edamam API </a>
+<a href="/spoonacular" class="btn btn-dark">Spoonacular API </a>
 </div>
-
 {% endblock %}
     
