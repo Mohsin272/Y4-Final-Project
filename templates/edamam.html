@@ -1,21 +1,19 @@
 {% extends "base.html" %}
 {% block body %}
 <style>
-  body {
-    /* The image used */
-    background-image: url("img/chopping_board.jpg");
-    /* Full height */
-    height: 100%; 
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  </style>
+ 
+body {
+  background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
+  background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  position: relative;
+}
+</style>
 <div class="d-flex justify-content-center">
 <div class="text-left">
-    Testing the Edamam API calls
-<br>
 <br>
     <form method="post">
          <div class="form-group w-35">
@@ -23,9 +21,14 @@
            <br>
            <input type="text" class="form-control" id="ingredientsinput" placeholder="Enter ingredients" name="ingredients" required >
            <br>
-           <label for="mealtype">Meal Type (Breakfast/Lunch/Dinner)</label>
-           <br>
-           <input type="text" class="form-control" id="mealtypeinput" placeholder="Enter mealtype" name="mealtype" required >
+           <label for="mealtype">Meal Type</label>
+         <select class="form-select form-select-sm w-35" name="mealtype" multiple aria-label="multiple select example "required>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Snack">Snack</option>
+              <option value="Teatime">Teatime</option>
+            </select>
          </div>
          <br>
          <label for="dietdropdown">Dietary requirements?</label>
@@ -43,9 +46,10 @@
               <option value="vegetarian">Vegetarian</option>
             </select>
          <br>
+         <div class="col-md-12 text-center">
          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
        </form>
 </div>
-
 </div>
 {% endblock %}
