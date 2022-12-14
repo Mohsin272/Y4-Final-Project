@@ -30,18 +30,30 @@
             <h5 class="card-title">{{row['recipe']['label']}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Calories:{{ (row['recipe']['calories'])|int }}</h6>
             <p class="card-text"> 
-                Ingredients:
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Dropdown button
+                    </button>
+                    <ul class="dropdown-menu">
+                        Ingredients:
+                        {% for row in row['recipe']['ingredientLines'] %} 
+                        <br>
+                        {{row}} 
+                        <li><hr class="dropdown-divider"></li>
+                        {% endfor %}
+                    </ul>
+                  </div>
+                <!-- Ingredients:
                 {% for row in row['recipe']['ingredientLines'] %} 
                 <br>
                 {{row}} 
-                {% endfor %}
+                {% endfor %} -->
             </p>
             <a href="{{ row['recipe']['url'] }}" class="btn btn-outline-success">More Info</a>
         </div>
         </div>
     <!-- </div> -->
     </div>
-    
     {% endfor %}
 </div>
     <!-- </div> -->
