@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="d-flex justify-content-center">
-<a href="/edamam" class="btn btn-dark">Edamam API </a>
+<style>
+/* Add a hover effect to the button */
+.btn:hover {
+  transform: scale(1.1);
+}
+
+</style>
+<div class="text-center">
+    <h1>Welcome to Macro Meals</h1>
+    <p>
+        A Web App to get personalised recipes on the go. 
+    </p>
+<a href="/recipe" class="btn btn-dark">Get Started</a>
 </div>
 {% endblock %}
     

@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 <style>
- 
-body {
+  body {
   background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
   background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
   -webkit-background-size: cover;
@@ -10,46 +9,46 @@ body {
   -o-background-size: cover;
   background-size: cover;
   position: relative;
-}
+  }
 </style>
 <div class="d-flex justify-content-center">
-<div class="text-left">
-<br>
+  <div class="text-left">
+    <br>
     <form method="post">
-         <div class="form-group w-35">
-           <label for="ingredientsinput">Ingredients</label>
-           <br>
-           <input type="text" class="form-control" id="ingredientsinput" placeholder="Enter ingredients" name="ingredients" required >
-           <br>
-           <label for="mealtype">Meal Type</label>
-         <select class="form-select form-select-sm w-35" name="mealtype" multiple aria-label="multiple select example "required>
-              <option value="Breakfast">Breakfast</option>
-              <option value="Lunch">Lunch</option>
-              <option value="Dinner">Dinner</option>
-              <option value="Snack">Snack</option>
-              <option value="Teatime">Teatime</option>
-            </select>
-         </div>
-         <br>
-         <label for="dietdropdown">Dietary requirements?</label>
-         <select class="form-select form-select-sm w-35" name="dietdropdown" multiple aria-label="multiple select example">
-            <option selected="">None</option>
-              <option value="alcohol-free">Alcohol-Free</option>
-              <option value="celery-free">Celery-Free</option>
-              <option value="dairy-free">Dairy-Free</option>
-              <option value="egg-free">Egg-Free</option>
-              <option value="gluten-free">Gluten-Free</option>
-              <option value="kosher">Kosher</option>
-              <option value="peanut-free">Peanut-Free</option>
-              <option value="pescatarian">Pescatarian</option>
-              <option value="vegan">Vegan</option>
-              <option value="vegetarian">Vegetarian</option>
-            </select>
-         <br>
-         <div class="col-md-12 text-center">
-         <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="form-group w-35">
+        <label for="ingredientsinput">Ingredients</label>
+        <br>
+        <input type="text" class="form-control" id="ingredientsinput" placeholder="Enter ingredients" name="ingredients" required>
+        <br>
+        <label for="mealtype">Meal Type</label>
+        <select class="form-select form-select-sm w-35" name="mealtype" multiple aria-label="multiple select example "required>
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Snack">Snack</option>
+          <option value="Teatime">Teatime</option>
+        </select>
+        <br>
+        <label for="dietdropdown">Dietary requirements?</label>
+        <select class="form-select form-select-sm w-35" name="dietdropdown" multiple aria-label="multiple select example">
+          <option selected="">None</option>
+          <option value="alcohol-free">Alcohol-Free</option>
+          <option value="celery-free">Celery-Free</option>
+          <option value="dairy-free">Dairy-Free</option>
+          <option value="egg-free">Egg-Free</option>
+          <option value="gluten-free">Gluten-Free</option>
+          <option value="kosher">Kosher</option>
+          <option value="peanut-free">Peanut-Free</option>
+          <option value="pescatarian">Pescatarian</option>
+          <option value="vegan">Vegan</option>
+          <option value="vegetarian">Vegetarian</option>
+        </select>
+        <br>
+        <div class="col-md-12 text-center">
+          <button type="submit" class="btn btn-primary">Submit</button> 
         </div>
-       </form>
-</div>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

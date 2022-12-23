@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% block body %}
 <style>
  
@@ -17,45 +18,55 @@
 }
 
 </style>
-<!-- <div class="col d-flex justify-content-center"> -->
+
 <div class="d-flex flex-wrap justify-content-evenly">
 {% for row in data %}
 <div class="position-relative border-0 card mb-5" style="width: 15rem;" >
-    <!-- <div class="row g-0"> -->
-        <!-- <div class="col-md-4"> -->
         <img class="img-thumbnail"  src="{{ row['recipe']['image'] }}" alt="Card image cap">
-        <!-- </div> -->
         <div class="col-md-8">
         <div class="card-body">
             <h5 class="card-title">{{row['recipe']['label']}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Calories:{{ (row['recipe']['calories'])|int }}</h6>
-            <p class="card-text"> 
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Dropdown button
-                    </button>
-                    <ul class="dropdown-menu">
-                        Ingredients:
-                        {% for row in row['recipe']['ingredientLines'] %} 
-                        <br>
-                        {{row}} 
-                        <li><hr class="dropdown-divider"></li>
-                        {% endfor %}
-                    </ul>
-                  </div>
-                <!-- Ingredients:
-                {% for row in row['recipe']['ingredientLines'] %} 
-                <br>
-                {{row}} 
-                {% endfor %} -->
-            </p>
-            <a href="{{ row['recipe']['url'] }}" class="btn btn-outline-success">More Info</a>
         </div>
         </div>
-    <!-- </div> -->
+
+    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#itemModal-{{ loop.index }}">
+        Click for More Info
+      </button>
+      
+     <!-- Modal -->
+  <div class="modal fade" id="itemModal-{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel-{{ loop.index }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="itemModalLabel-{{ loop.index }}">{{ row['recipe']['label'] }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <b>Ingredients:</b>
+          {% for row in row['recipe']['ingredientLines'] %} 
+          <br>
+          {{row}} 
+          {% endfor %}
+          <br>
+          <hr>
+          <b>Calories:</b> {{ (row['recipe']['calories'])|int }}
+          <br>
+          <hr>
+          <a href="{{ row['recipe']['url'] }}" class="btn btn-outline-success">Get Instructions</a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
+  </div>
+    </div>
+    
     {% endfor %}
 </div>
+
     <!-- </div> -->
 <!-- <div class="text-left"> 
 <div class="row">
