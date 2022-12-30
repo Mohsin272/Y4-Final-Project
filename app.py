@@ -69,6 +69,9 @@ def process():
     meal_type = request.form["mealtype"]
     ingredients = request.form["ingredients"]
     health = request.form["dietdropdown"]
+    selected = request.form.getlist('check')
+    selected = ','.join(selected)
+    print(selected+","+ingredients)
     if health == "" or " ":
         result = requests.get(
             f"https://api.edamam.com/search?q={ingredients}&mealType={meal_type}&app_id={app_id}&app_key={app_key}"
