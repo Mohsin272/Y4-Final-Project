@@ -18,7 +18,9 @@
 }
 
 </style>
-
+{% if not data%}
+<p class="text-center">No Recipes found with your inputted ingredients</p>
+{% else %}
 <div class="d-flex flex-wrap justify-content-evenly">
 {% for row in data %}
 <div class="position-relative border-0 card mb-5" style="width: 15rem;" >
@@ -85,8 +87,8 @@
     </div>
   </div>
     </div>
-    
     {% endfor %}
+    {% endif %}
 </div>
 
     <!-- </div> -->

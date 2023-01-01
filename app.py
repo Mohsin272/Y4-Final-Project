@@ -64,14 +64,18 @@ def convert_to_metric(value, unit):
 
 @app.route("/recipe", methods=["GET", "POST"])
 def process():
-    app_id = "0620fd4d"
-    app_key = "cb6954f29368c1f234ebc4d102ea0a20	"
+    app_id = "bdeb697a"
+    app_key = "f601c085e3fc050ec1f2f83a4a5be3a0"
     meal_type = request.form["mealtype"]
     ingredients = request.form["ingredients"]
     health = request.form["dietdropdown"]
     selected = request.form.getlist('check')
     selected = ','.join(selected)
-    print(selected+","+ingredients)
+    if ingredients == "":
+        ingredients=selected
+    else:
+        ingredients=selected+","+ingredients
+    print(ingredients)
     if health == "" or " ":
         result = requests.get(
             f"https://api.edamam.com/search?q={ingredients}&mealType={meal_type}&app_id={app_id}&app_key={app_key}"
