@@ -326,23 +326,127 @@
             </div>
           </ul>
         </div>
-      
+        
       <div class="form-group w-35">
         <br>
         <label for="ingredientsinput">Additional Ingredients</label>
         <br>
         <input type="text" class="form-control" id="ingredientsinput" placeholder="Enter ingredients" name="ingredients">
         <br>
-        <label for="mealtype">Meal Type</label>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Meal Type
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" required>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Breakfast" id="flexCheckDefault" name="mealcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Breakfast
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Lunch" id="flexCheckDefault" name="mealcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Lunch
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Dinner" id="flexCheckDefault" name="mealcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Dinner
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Snack" id="flexCheckDefault" name="mealcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Snack
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Teatime" id="flexCheckDefault" name="mealcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Teatime 
+              </label>
+            </div>
+          </ul>
+        </div> 
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Dietary Requirements
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="alcohol-free" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Alcohol-Free
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="celery-free" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Celery-Free
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="dairy-free" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Dairy-Free
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="egg-free" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Egg-Free
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="gluten-free" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Gluten-Free
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="kosher" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Kosher 
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="peanut-free" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Peanut-Free
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="pescatarian" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Pescatarian 
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="vegan" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Vegan 
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="vegetarian" id="flexCheckDefault" name="dietcheck">
+              <label class="form-check-label" for="flexCheckDefault">
+                Vegetarian 
+              </label>
+            </div>
+          </ul>
+        </div>
+        <!-- <label for="mealtype">Meal Type</label>
         <select class="form-select form-select-sm w-35" name="mealtype" multiple aria-label="multiple select example "required>
           <option value="Breakfast">Breakfast</option>
           <option value="Lunch">Lunch</option>
           <option value="Dinner">Dinner</option>
           <option value="Snack">Snack</option>
           <option value="Teatime">Teatime</option>
-        </select>
-        <br>
-        <label for="dietdropdown">Dietary requirements?</label>
+        </select> -->
+        <!-- <br> -->
+        <!-- <label for="dietdropdown">Dietary requirements?</label>
         <select class="form-select form-select-sm w-35" name="dietdropdown" multiple aria-label="multiple select example">
           <option selected="">None</option>
           <option value="alcohol-free">Alcohol-Free</option>
@@ -355,7 +459,8 @@
           <option value="pescatarian">Pescatarian</option>
           <option value="vegan">Vegan</option>
           <option value="vegetarian">Vegetarian</option>
-        </select>
+        </select> -->
+        <br>
         <br>
         <div class="col-md-12 text-center">
           <button type="submit" class="btn btn-primary">Submit</button> 

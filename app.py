@@ -66,23 +66,32 @@ def convert_to_metric(value, unit):
 def process():
     app_id = "bdeb697a"
     app_key = "f601c085e3fc050ec1f2f83a4a5be3a0"
-    meal_type = request.form["mealtype"]
+    # meal_type = request.form["mealtype"]
+    meal_type = request.form.getlist("mealcheck")
+    meal_type = ",".join(meal_type)
     ingredients = request.form["ingredients"]
-    health = request.form["dietdropdown"]
-    selected = request.form.getlist('check')
-    selected = ','.join(selected)
+    # health = request.form["dietdropdown"]
+    health = request.form.getlist("dietcheck")
+    health = ",".join(health)
+    selectedIng = request.form.getlist("check")
+    selectedIng = ",".join(selectedIng)
+    print(selectedIng)
     if ingredients == "":
-        ingredients=selected
+        ingredients = selectedIng
     else:
-        ingredients=selected+","+ingredients
+        ingredients = selectedIng + "," + ingredients
     print(ingredients)
-    if health == "" or " ":
+    if health == "" and meal_type == "":
         result = requests.get(
-            f"https://api.edamam.com/search?q={ingredients}&mealType={meal_type}&app_id={app_id}&app_key={app_key}"
+            f"https://api.edamam.com/search?q={ingredients}&app_id={app_id}&app_key={app_key}"
         )
     elif meal_type == "" or " ":
         result = requests.get(
             f"https://api.edamam.com/search?q={ingredients}&health={health}&app_id={app_id}&app_key={app_key}"
+        )
+    elif health == "" or " ":
+        result = requests.get(
+            f"https://api.edamam.com/search?q={ingredients}&mealType={meal_type}&app_id={app_id}&app_key={app_key}"
         )
     else:
         result = requests.get(
