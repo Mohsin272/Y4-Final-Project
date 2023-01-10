@@ -55,6 +55,8 @@
           <br>
           <hr>
           <b>Calories:</b> {{ (row['recipe']['calories'])|int }}
+          <b>Feeds:</b> {{(row['recipe']['yield'])|int }}
+          <b>Time:</b> {{(row['recipe']['totalTime'])|int }} minutes
           <br>
           <hr>
           <b>Nutritional Information:</b>

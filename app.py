@@ -18,50 +18,6 @@ def edamam():
     )
 
 
-def convert_to_metric(value, unit):
-    # This function converts the given value and unit to the equivalent
-    # value in metric units. It returns a string with the value and unit
-    # in the format "value unit".
-
-    # Convert ounces to grams
-    if unit == "oz":
-        value = value * 28.3495
-        unit = "g"
-
-    # Convert pounds to grams
-    elif unit == "lb":
-        value = value * 453.592
-        unit = "g"
-
-    # Convert fluid ounces to milliliters
-    elif unit == "fl oz":
-        value = value * 29.5735
-        unit = "ml"
-
-    # Convert cups to milliliters
-    elif unit == "cup":
-        value = value * 236.588
-        unit = "ml"
-
-    # Convert pints to milliliters
-    elif unit == "pt":
-        value = value * 473.176
-        unit = "ml"
-
-    # Convert quarts to milliliters
-    elif unit == "qt":
-        value = value * 946.353
-        unit = "ml"
-
-    # Convert gallons to milliliters
-    elif unit == "gal":
-        value = value * 3785.41
-        unit = "ml"
-
-    # Return the converted value and unit
-    return f"{value} {unit}"
-
-
 @app.route("/recipe", methods=["GET", "POST"])
 def process():
     app_id = "bdeb697a"
