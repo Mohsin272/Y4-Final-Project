@@ -20,8 +20,8 @@ def edamam():
 
 @app.route("/recipe", methods=["GET", "POST"])
 def process():
-    app_id = "bdeb697a"
-    app_key = "f601c085e3fc050ec1f2f83a4a5be3a0"
+    app_id = "41124d1e"
+    app_key = "da107657cdc9a798f1921db69fe67581"
     # meal_type = request.form["mealtype"]
     meal_type = request.form.getlist("mealcheck")
     meal_type = ",".join(meal_type)
