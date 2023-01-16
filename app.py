@@ -29,17 +29,15 @@ def process():
     health = ",".join(health)
     selectedIng = request.form.getlist("check")
     selectedIng = ",".join(selectedIng)
-    print(selectedIng)
     if ingredients == "":
         ingredients = selectedIng
     else:
         ingredients = selectedIng + "," + ingredients
-    print(ingredients)
     if health == "" and meal_type == "":
         result = requests.get(
             f"https://api.edamam.com/search?q={ingredients}&app_id={app_id}&app_key={app_key}"
         )
-    elif meal_type == "" or " ":
+    elif not meal_type:
         result = requests.get(
             f"https://api.edamam.com/search?q={ingredients}&health={health}&app_id={app_id}&app_key={app_key}"
         )
