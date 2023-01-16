@@ -22,11 +22,9 @@ def edamam():
 def process():
     app_id = "41124d1e"
     app_key = "da107657cdc9a798f1921db69fe67581"
-    # meal_type = request.form["mealtype"]
     meal_type = request.form.getlist("mealcheck")
     meal_type = ",".join(meal_type)
     ingredients = request.form["ingredients"]
-    # health = request.form["dietdropdown"]
     health = request.form.getlist("dietcheck")
     health = ",".join(health)
     selectedIng = request.form.getlist("check")

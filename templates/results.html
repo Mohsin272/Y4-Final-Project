@@ -20,7 +20,6 @@
 </style>
 {% if not data%}
 <p class="text-center">Sorry no recipes found with your inputted ingredients</p>
-<!-- <p class="text-center">You may have entered too much/little information</p> -->
 {% else %}
 <div class="d-flex flex-wrap justify-content-evenly">
 {% for row in data %}
@@ -92,47 +91,5 @@
     {% endfor %}
     {% endif %}
 </div>
-
-    <!-- </div> -->
-<!-- <div class="text-left"> 
-<div class="row">
-    {% for row in data %}
-    <div class="col-md-3">
-
-        <div class="card text-white bg-dark mb-3" style="width: 20rem;">
-             <img class="card-img-top" src="{{ row['recipe']['image'] }}" alt="Card image cap"> 
-            <div class="card-body">
-                <h5 class="card-title">{{row['recipe']['label']}}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Calories:{{row['recipe']['calories']}}</h6>
-                    <p class="card-text"> 
-                        Ingredients:
-                        {% for row in row['recipe']['ingredientLines'] %} 
-                        <br>
-                        {{row}} 
-                        {% endfor %}
-                    </p>
-                <a href="{{ row['recipe']['url'] }}" class="btn btn-primary">Go to Link</a>
-            </div>
-        </div>
-        
-    </div>
-    {% endfor %}
-</div>
-</div> -->
-
-
-<!-- <div class="text-left">
-    {% for row in data %}    
-    <p class="fw-bold text-info">Recipe:</p>{{row['recipe']['label']}}
-    <p class="fw-bold">Calories:</p> {{row['recipe']['calories']}}  
-    <p class="fw-bold">Ingredients:</p>
-    {% for row in row['recipe']['ingredientLines'] %} 
-    <br>
-    {{row}} 
-    {% endfor %}
-    {% endfor %}
-    
-</div> -->
-
 {% endblock %}
     
