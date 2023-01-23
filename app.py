@@ -1,8 +1,14 @@
 from flask import Flask, request, render_template
 import requests
-
+import DBcm
 app = Flask(__name__)
 
+config = {
+    "host": "localhost",
+    "database": "macro_meals_db",
+    "user":"root",
+    "password": "macro_meals_password"
+}
 
 @app.route("/")
 def index():
@@ -11,6 +17,22 @@ def index():
 @app.route("/login")
 def login():
     return render_template("login.html", title="Welcome", heading="")
+
+@app.route("/processform", methods=['GET', 'POST'])
+def processform():
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    with DBcm.UseDatabase(config) as db:
+        SQL = """
+            insert into users
+            (Username, Email, Password)
+            values
+            (%s, %s, %s)
+        """
+        db.execute(SQL, (username, email,password))
+    return render_template("index.html", title="Thanks For Your Information")
 
 @app.route("/recipe")
 def edamam():
