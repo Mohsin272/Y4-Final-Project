@@ -14,9 +14,9 @@ config = {
 def index():
     return render_template("index.html", title="Welcome", heading="")
 
-@app.route("/login")
+@app.route("/register")
 def login():
-    return render_template("login.html", title="Welcome", heading="")
+    return render_template("register.html", title="Welcome", heading="")
 
 @app.route("/processform", methods=['GET', 'POST'])
 def processform():
@@ -32,7 +32,7 @@ def processform():
             (%s, %s, %s)
         """
         db.execute(SQL, (username, email,password))
-    return render_template("index.html", title="Thanks For Your Information")
+    return render_template("edamam.html", title="Thanks For Your Information")
 
 @app.route("/recipe")
 def edamam():
