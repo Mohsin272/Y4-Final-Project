@@ -1,7 +1,10 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 import requests
+import secrets
 import DBcm
+import bcrypt
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)
 
 config = {
     "host": "localhost",
@@ -15,24 +18,38 @@ def index():
     return render_template("index.html", title="Welcome", heading="")
 
 @app.route("/register")
-def login():
+def register():
     return render_template("register.html", title="Welcome", heading="")
+@app.route("/login")
+def login():
+    return render_template("login.html", title="Welcome", heading="")
 
 @app.route("/processform", methods=['GET', 'POST'])
 def processform():
+    errors=[]
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
+    repeatpassword = request.form.get("repeatpassword")
+    password = password.encode('utf-8')
+    repeatpassword = repeatpassword.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password, salt)
+    hashed_repeat_password =  bcrypt.hashpw(repeatpassword, salt)
+    if bcrypt.checkpw(hashed_password, hashed_repeat_password):
+        errors="Passwords do not match"
+    else:
+        with DBcm.UseDatabase(config) as db:
+            SQL = """
+                insert into users
+                (Username, Email, Password)
+                values
+                (%s, %s, %s)
+            """
 
-    with DBcm.UseDatabase(config) as db:
-        SQL = """
-            insert into users
-            (Username, Email, Password)
-            values
-            (%s, %s, %s)
-        """
-        db.execute(SQL, (username, email,password))
-    return render_template("edamam.html", title="Thanks For Your Information")
+            db.execute(SQL, (username, email,hashed_password))
+        return redirect("/recipe")
+    return render_template("register.html", title="Welcome",errors=errors)
 
 @app.route("/recipe")
 def edamam():
