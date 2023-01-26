@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, session
 import requests
 import secrets
 import DBcm
 import bcrypt
+salt = bcrypt.gensalt()
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
@@ -20,9 +21,37 @@ def index():
 @app.route("/register")
 def register():
     return render_template("register.html", title="Welcome", heading="")
-@app.route("/login")
+
+@app.route("/dashboard")
+def dashboard():
+    if 'username' not in session:
+        return redirect('/login')
+    return render_template("dashboard.html",heading="Welcome, ' + session['username']")
+
+def check_credentials(username, password):
+    password = password.decode()
+    with DBcm.UseDatabase(config) as db:
+        SQL = """select * from users where Username = %s and Password = %s"""
+        db.execute(SQL, (username, password))
+        print (password)
+        print (username)
+        return db.fetchone() is not None
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
-    return render_template("login.html", title="Welcome", heading="")
+    errors=""
+    if request.method == 'POST':
+        username = request.form.get("username")
+        password = request.form.get("password")
+        password = password.encode('utf-8')
+        hashed_password = bcrypt.hashpw(password, salt)
+        if check_credentials(username, hashed_password):
+            session['username'] = username
+            return redirect('/dashboard')
+        else:
+            errors="Username/Password are incorrect"
+            return redirect('/login')
+    return render_template("login.html", title="Welcome", errors=errors)
 
 @app.route("/processform", methods=['GET', 'POST'])
 def processform():
@@ -33,7 +62,6 @@ def processform():
     repeatpassword = request.form.get("repeatpassword")
     password = password.encode('utf-8')
     repeatpassword = repeatpassword.encode('utf-8')
-    salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password, salt)
     hashed_repeat_password =  bcrypt.hashpw(repeatpassword, salt)
     if bcrypt.checkpw(hashed_password, hashed_repeat_password):
@@ -48,7 +76,7 @@ def processform():
             """
 
             db.execute(SQL, (username, email,hashed_password))
-        return redirect("/recipe")
+        return redirect("/login")
     return render_template("register.html", title="Welcome",errors=errors)
 
 @app.route("/recipe")
