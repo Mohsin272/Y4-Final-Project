@@ -3,6 +3,7 @@ import requests
 import secrets
 import DBcm
 import bcrypt
+
 salt = bcrypt.gensalt()
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -10,62 +11,71 @@ app.secret_key = secrets.token_hex(32)
 config = {
     "host": "localhost",
     "database": "macro_meals_db",
-    "user":"root",
-    "password": "macro_meals_password"
+    "user": "root",
+    "password": "macro_meals_password",
 }
+
 
 @app.route("/")
 def index():
     return render_template("index.html", title="Welcome", heading="")
 
+
 @app.route("/register")
 def register():
     return render_template("register.html", title="Welcome", heading="")
 
+
 @app.route("/dashboard")
 def dashboard():
-    if 'username' not in session:
-        return redirect('/login')
-    return render_template("dashboard.html",heading="Welcome, ' + session['username']")
+    if "username" not in session:
+        return redirect("/login")
+    return render_template("dashboard.html", heading="Welcome, " + session["username"])
 
-def check_credentials(username, password):
-    password = password.decode()
-    with DBcm.UseDatabase(config) as db:
-        SQL = """select * from users where Username = %s and Password = %s"""
-        db.execute(SQL, (username, password))
-        print (password)
-        print (username)
-        return db.fetchone() is not None
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    return redirect("/login")
+
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    errors=""
-    if request.method == 'POST':
+    errors = None
+    if request.method == "POST":
         username = request.form.get("username")
-        password = request.form.get("password")
-        password = password.encode('utf-8')
-        hashed_password = bcrypt.hashpw(password, salt)
-        if check_credentials(username, hashed_password):
-            session['username'] = username
-            return redirect('/dashboard')
-        else:
-            errors="Username/Password are incorrect"
-            return redirect('/login')
+        Userpassword = request.form.get("password")
+        print(Userpassword)
+        with DBcm.UseDatabase(config) as db:
+            SQL = """select * from users where Username = %s"""
+            db.execute(SQL, (username,))
+            res = db.fetchone()
+            print(res)
+            print(Userpassword)
+            Userpassword = Userpassword.encode("utf-8")
+            hashedDB = res[3].encode("utf-8")
+            passres = bcrypt.checkpw(Userpassword, hashedDB)
+            if res and passres:
+                session["username"] = username
+                return redirect("/dashboard")
+            else:
+                errors = "Username/Password are incorrect"
     return render_template("login.html", title="Welcome", errors=errors)
 
-@app.route("/processform", methods=['GET', 'POST'])
+
+@app.route("/processform", methods=["GET", "POST"])
 def processform():
-    errors=[]
+    errors = []
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
     repeatpassword = request.form.get("repeatpassword")
-    password = password.encode('utf-8')
-    repeatpassword = repeatpassword.encode('utf-8')
+    password = password.encode("utf-8")
+    repeatpassword = repeatpassword.encode("utf-8")
     hashed_password = bcrypt.hashpw(password, salt)
-    hashed_repeat_password =  bcrypt.hashpw(repeatpassword, salt)
+    hashed_repeat_password = bcrypt.hashpw(repeatpassword, salt)
     if bcrypt.checkpw(hashed_password, hashed_repeat_password):
-        errors="Passwords do not match"
+        errors = "Passwords do not match"
     else:
         with DBcm.UseDatabase(config) as db:
             SQL = """
@@ -75,9 +85,10 @@ def processform():
                 (%s, %s, %s)
             """
 
-            db.execute(SQL, (username, email,hashed_password))
+            db.execute(SQL, (username, email, hashed_password))
         return redirect("/login")
-    return render_template("register.html", title="Welcome",errors=errors)
+    return render_template("register.html", title="Welcome", errors=errors)
+
 
 @app.route("/recipe")
 def edamam():

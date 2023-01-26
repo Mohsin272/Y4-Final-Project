@@ -1,1 +1,3 @@
-da107657cdc9a798f1921db69fe67581
+        password = request.form.get("password")
+        password = password.encode('utf-8')
+        hashed_password = bcrypt.hashpw(password, salt)
