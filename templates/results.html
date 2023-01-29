@@ -80,6 +80,9 @@
           {{row['recipe']['totalNutrients']['FIBTG']['unit']}}
           <hr>
           <a href="{{ row['recipe']['url'] }}" target="_blank" class="btn btn-outline-success">Get Instructions</a>
+          <form action="/addrecipe" method="post">
+          <button type="submit" class="btn btn-outline-info">Save Recipe</button>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

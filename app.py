@@ -3,6 +3,7 @@ import requests
 import secrets
 import DBcm
 import bcrypt
+from concurrent.futures import ThreadPoolExecutor
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
@@ -49,11 +50,11 @@ def login():
         with DBcm.UseDatabase(config) as db:
             SQL = """select * from users where Username = %s"""
             db.execute(SQL, (username,))
-            res = db.fetchone()
+            res = db.fetchall()
             print(res)
             print(Userpassword)
             Userpassword = Userpassword.encode("utf-8")
-            hashedDB = res[3].encode("utf-8")
+            hashedDB = res[0][3].encode("utf-8")
             passres = bcrypt.checkpw(Userpassword, hashedDB)
             if res and passres:
                 session["username"] = username
@@ -62,6 +63,10 @@ def login():
                 errors = "Username/Password are incorrect"
     return render_template("login.html", title="Welcome", errors=errors)
 
+@app.route("/addrecipe", methods=["GET", "POST"])
+def addrecipe():
+    errors = []
+    pass
 
 @app.route("/processform", methods=["GET", "POST"])
 def processform():
@@ -132,9 +137,22 @@ def process():
         )
     data = result.json()
     res = data["hits"]
+
+    with ThreadPoolExecutor() as executor:
+        status_codes = list(executor.map(check_status, [row['recipe']['url'] for row in res]))
+        res = [row for i, row in enumerate(res) if status_codes[i] == 200]
+    # for i, row in enumerate(res):
+    #     url=row['recipe']['url']
+    #     response=requests.get(url)
+    #     if response.status_code != 200:
+    #         del res[i]
+
     return render_template(
         "results.html", title="Suggested Recipes ", heading="Your Recipes", data=res
     )
+
+def check_status(url):
+    return requests.get(url).status_code
 
 
 if __name__ == "__main__":  # pragma no cover
