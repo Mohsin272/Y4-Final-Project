@@ -19,12 +19,12 @@ config = {
 
 @app.route("/")
 def index():
-    return render_template("index.html", title="Welcome", heading="")
+    return render_template("index.html", title="Welcome")
 
 
 @app.route("/register")
 def register():
-    return render_template("register.html", title="Welcome", heading="")
+    return render_template("register.html", title="Welcome")
 
 
 @app.route("/dashboard")
@@ -42,17 +42,16 @@ def logout():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    errors = None
+    errors = ""
     if request.method == "POST":
         username = request.form.get("username")
+        email= request.form.get("email")
         Userpassword = request.form.get("password")
         print(Userpassword)
         with DBcm.UseDatabase(config) as db:
-            SQL = """select * from users where Username = %s"""
-            db.execute(SQL, (username,))
+            SQL = """select * from users where Email = %s"""
+            db.execute(SQL, (email,))
             res = db.fetchall()
-            print(res)
-            print(Userpassword)
             Userpassword = Userpassword.encode("utf-8")
             hashedDB = res[0][3].encode("utf-8")
             passres = bcrypt.checkpw(Userpassword, hashedDB)
@@ -68,9 +67,19 @@ def addrecipe():
     errors = []
     pass
 
+def check_email_exists(email):
+    with DBcm.UseDatabase(config) as d:
+        SQL = """select * from users where Email = %s"""
+        d.execute(SQL, (email,))
+        rows = d.fetchall()
+    if len(rows) > 0:
+        return True
+    else:
+        return False
+
 @app.route("/processform", methods=["GET", "POST"])
 def processform():
-    errors = []
+    errors  = []
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
@@ -79,8 +88,10 @@ def processform():
     repeatpassword = repeatpassword.encode("utf-8")
     hashed_password = bcrypt.hashpw(password, salt)
     hashed_repeat_password = bcrypt.hashpw(repeatpassword, salt)
-    if bcrypt.checkpw(hashed_password, hashed_repeat_password):
-        errors = "Passwords do not match"
+    if password!=repeatpassword:
+        errors.append("Passwords do not match")
+    if check_email_exists(email) == True:
+        errors.append("Email already registered")
     else:
         with DBcm.UseDatabase(config) as db:
             SQL = """
@@ -92,7 +103,7 @@ def processform():
 
             db.execute(SQL, (username, email, hashed_password))
         return redirect("/login")
-    return render_template("register.html", title="Welcome", errors=errors)
+    return render_template("register.html", title="Welcome", errors = errors )
 
 
 @app.route("/recipe")
@@ -141,12 +152,6 @@ def process():
     with ThreadPoolExecutor() as executor:
         status_codes = list(executor.map(check_status, [row['recipe']['url'] for row in res]))
         res = [row for i, row in enumerate(res) if status_codes[i] == 200]
-    # for i, row in enumerate(res):
-    #     url=row['recipe']['url']
-    #     response=requests.get(url)
-    #     if response.status_code != 200:
-    #         del res[i]
-
     return render_template(
         "results.html", title="Suggested Recipes ", heading="Your Recipes", data=res
     )

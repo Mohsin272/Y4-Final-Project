@@ -36,8 +36,10 @@
         Please re-enter your password.
       </div>
     </div>
-    <p class="text-danger"> {{errors}}</p>
     <div class="text-center">
+      {% for e in errors %}
+      <p class="text-danger"> {{e}}</p>
+      {% endfor %}
     <button type="submit" class="btn btn-primary">Submit</button>
   </div>
   </form>

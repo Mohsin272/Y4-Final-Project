@@ -16,6 +16,13 @@
       </div>
     </div>
     <div class="mb-3">
+      <label for="emailID" class="form-label">Email</label>
+      <input type="email" class="form-control" id="emailID" name="email" required>
+      <div class="invalid-feedback">
+        Please enter your email.
+      </div>
+    </div>
+    <div class="mb-3">
       <label for="passwordID" class="form-label">Password</label>
       <input type="password" class="form-control" id="passwordID" name="password" required>
       <div class="invalid-feedback">
@@ -23,9 +30,7 @@
       </div>
     </div>
     <div class="text-center">
-      {% if errors %}
       <p class="text-danger"> {{errors}}</p>
-      {% endif %}
         <button type="submit" class="btn btn-primary">Login</button>
         <br>
         <p>Not a member? <a href="/register">Register</a></p>
