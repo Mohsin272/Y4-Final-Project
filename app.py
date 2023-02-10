@@ -16,7 +16,6 @@ config = {
     "password": "macro_meals_password",
 }
 
-
 @app.route("/")
 def index():
     return render_template("index.html", title="Welcome")
@@ -47,7 +46,6 @@ def login():
         username = request.form.get("username")
         email= request.form.get("email")
         Userpassword = request.form.get("password")
-        print(Userpassword)
         with DBcm.UseDatabase(config) as db:
             SQL = """select * from users where Email = %s"""
             db.execute(SQL, (email,))
@@ -65,7 +63,55 @@ def login():
 @app.route("/addrecipe", methods=["GET", "POST"])
 def addrecipe():
     errors = []
-    pass
+    Ingredients = request.form.get("Ingredients")
+    Calories = request.form.get("Calories")
+    Servings = request.form.get("Servings")
+    Carbs_name = request.form.get("Carbs name")
+    Carbs_value = request.form.get("Carbs value")
+    Carbs_unit = request.form.get("Carbs unit")
+    Fat_name = request.form.get("Fat name")
+    Fat_value = request.form.get("Fat value")
+    Fat_unit = request.form.get("Fat unit")
+    Protein_name = request.form.get("Protein name")
+    Protein_value = request.form.get("Protein value")
+    Protein_unit = request.form.get("Protein unit")
+    Sugars_name = request.form.get("Sugars name")
+    Sugars_value = request.form.get("Sugars value")
+    Sugars_unit = request.form.get("Sugars unit")
+    Fiber_name = request.form.get("Fiber name")
+    Fiber_value = request.form.get("Fiber value")
+    Fiber_unit = request.form.get("Fiber unit")
+    Link = request.form.get("Link")
+    Label = request.form.get("Label")
+    Image = request.form.get("Image")
+
+    with DBcm.UseDatabase(config) as db:
+            SQL = """
+                insert into saved_recipes
+                (Username, Ingredients, Calories, Servings,
+                Carbs_name, Carbs_value, Carbs_unit, 
+                Fat_name, Fat_value, Fat_unit,
+                Protein_name, Protein_value, Protein_unit,
+                Sugars_name, Sugars_value, Sugars_unit,
+                Fiber_name, Fiber_value, Fiber_unit,
+                Link, Label, Image
+                )
+                values
+                (%s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s,
+                %s, %s
+                )
+            """
+            db.execute(SQL, (session["username"], Ingredients, Calories, Servings,
+                Carbs_name, Carbs_value, Carbs_unit, 
+                Fat_name, Fat_value, Fat_unit,
+                Protein_name, Protein_value, Protein_unit,
+                Sugars_name, Sugars_value, Sugars_unit,
+                Fiber_name, Fiber_value, Fiber_unit,
+                Link, Label, Image))
+    return render_template("dashboard.html", title="Dashboard", errors = errors )
 
 def check_email_exists(email):
     with DBcm.UseDatabase(config) as d:

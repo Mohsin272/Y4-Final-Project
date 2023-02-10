@@ -3,15 +3,15 @@
 {% block body %}
 <style>
  
-    body {
-      background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
-      background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
-      position: relative;
-    }
+body {
+  background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
+  background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  position: relative;
+}
 
 .card-title {
     margin-bottom: 0;
@@ -81,6 +81,31 @@
           <hr>
           <a href="{{ row['recipe']['url'] }}" target="_blank" class="btn btn-outline-success">Get Instructions</a>
           <form action="/addrecipe" method="post">
+            <!--
+              Hidden fields to hold all recipe information so it can be called by the save recipe function
+            -->
+            <!-- <input type="hidden" name="Username" value=""> -->
+            <input type="hidden" name="Ingredients" value="{{row['recipe']['ingredientLines']}}">
+            <input type="hidden" name="Calories" value="{{(row['recipe']['calories'])|int }}">
+            <input type="hidden" name="Servings" value="{{(row['recipe']['yield'])|int }}">
+            <input type="hidden" name="Carbs name" value="{{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}">
+            <input type="hidden" name="Carbs value" value="{{(row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int}}">
+            <input type="hidden" name="Carbs unit" value="{{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}">
+            <input type="hidden" name="Fat name" value="{{row['recipe']['totalNutrients']['FAT']['label']}}">
+            <input type="hidden" name="Fat value" value="{{(row['recipe']['totalNutrients']['FAT']['quantity'])|int}}">
+            <input type="hidden" name="Fat unit" value="{{row['recipe']['totalNutrients']['FAT']['unit']}}">
+            <input type="hidden" name="Protein name" value="{{row['recipe']['totalNutrients']['PROCNT']['label']}}">
+            <input type="hidden" name="Protein value" value="{{(row['recipe']['totalNutrients']['PROCNT']['quantity'])|int}}">
+            <input type="hidden" name="Protein unit" value="{{row['recipe']['totalNutrients']['PROCNT']['unit']}}">
+            <input type="hidden" name="Sugars name" value="{{row['recipe']['totalNutrients']['SUGAR']['label']}}">
+            <input type="hidden" name="Sugars value" value="{{(row['recipe']['totalNutrients']['SUGAR']['quantity'])|int}}">
+            <input type="hidden" name="Sugars unit" value="{{row['recipe']['totalNutrients']['SUGAR']['unit']}}">
+            <input type="hidden" name="Fiber name" value="{{row['recipe']['totalNutrients']['FIBTG']['label']}}">
+            <input type="hidden" name="Fiber value" value="{{(row['recipe']['totalNutrients']['FIBTG']['quantity'])|int}}">
+            <input type="hidden" name="Fiber unit" value="{{row['recipe']['totalNutrients']['FIBTG']['unit']}}">
+            <input type="hidden" name="Link" value="{{ row['recipe']['url'] }}">
+            <input type="hidden" name="Label" value="{{ row['recipe']['label'] }}">
+            <input type="hidden" name="Image" value="{{ row['recipe']['image'] }}">
           <button type="submit" class="btn btn-outline-info">Save Recipe</button>
           </form>
         </div>
