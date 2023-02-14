@@ -84,7 +84,7 @@ body {
             <!--
               Hidden fields to hold all recipe information so it can be called by the save recipe function
             -->
-            <!-- <input type="hidden" name="Username" value=""> -->
+            <input type="hidden" name="Username" value="">
             <input type="hidden" name="Ingredients" value="{{row['recipe']['ingredientLines']}}">
             <input type="hidden" name="Calories" value="{{(row['recipe']['calories'])|int }}">
             <input type="hidden" name="Servings" value="{{(row['recipe']['yield'])|int }}">

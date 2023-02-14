@@ -16,6 +16,7 @@ config = {
     "password": "macro_meals_password",
 }
 
+
 @app.route("/")
 def index():
     return render_template("index.html", title="Welcome")
@@ -26,11 +27,27 @@ def register():
     return render_template("register.html", title="Welcome")
 
 
+@app.route("/savedRecipe")
+def savedRecipe():
+    email = session.get("email", None)
+    if email is not None:
+        with DBcm.UseDatabase(config) as db:
+            SQL = """select * from saved_recipes where Email = %s"""
+            db.execute(SQL, (email,))
+        return render_template("savedRecipe.html", title="Saved Recipe")
+    else:
+        return redirect("/login")
+
+
 @app.route("/dashboard")
 def dashboard():
     if "username" not in session:
         return redirect("/login")
-    return render_template("dashboard.html", heading="Welcome, " + session["username"])
+    return render_template(
+        "dashboard.html",
+        title=session["username"] + " dashboard",
+        heading="Welcome, " + session["username"],
+    )
 
 
 @app.route("/logout")
@@ -44,7 +61,7 @@ def login():
     errors = ""
     if request.method == "POST":
         username = request.form.get("username")
-        email= request.form.get("email")
+        email = request.form.get("email")
         Userpassword = request.form.get("password")
         with DBcm.UseDatabase(config) as db:
             SQL = """select * from users where Email = %s"""
@@ -59,6 +76,7 @@ def login():
             else:
                 errors = "Username/Password are incorrect"
     return render_template("login.html", title="Welcome", errors=errors)
+
 
 @app.route("/addrecipe", methods=["GET", "POST"])
 def addrecipe():
@@ -84,34 +102,59 @@ def addrecipe():
     Link = request.form.get("Link")
     Label = request.form.get("Label")
     Image = request.form.get("Image")
+    Username = session.get("username", None)
 
-    with DBcm.UseDatabase(config) as db:
+    if Username is not None:
+        with DBcm.UseDatabase(config) as db:
             SQL = """
-                insert into saved_recipes
-                (Username, Ingredients, Calories, Servings,
-                Carbs_name, Carbs_value, Carbs_unit, 
-                Fat_name, Fat_value, Fat_unit,
-                Protein_name, Protein_value, Protein_unit,
-                Sugars_name, Sugars_value, Sugars_unit,
-                Fiber_name, Fiber_value, Fiber_unit,
-                Link, Label, Image
-                )
-                values
-                (%s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s,
-                %s, %s
-                )
-            """
-            db.execute(SQL, (session["username"], Ingredients, Calories, Servings,
-                Carbs_name, Carbs_value, Carbs_unit, 
-                Fat_name, Fat_value, Fat_unit,
-                Protein_name, Protein_value, Protein_unit,
-                Sugars_name, Sugars_value, Sugars_unit,
-                Fiber_name, Fiber_value, Fiber_unit,
-                Link, Label, Image))
-    return render_template("dashboard.html", title="Dashboard", errors = errors )
+                    insert into saved_recipes
+                    (Username, Ingredients, Calories, Servings,
+                    Carbs_name, Carbs_value, Carbs_unit, 
+                    Fat_name, Fat_value, Fat_unit,
+                    Protein_name, Protein_value, Protein_unit,
+                    Sugars_name, Sugars_value, Sugars_unit,
+                    Fiber_name, Fiber_value, Fiber_unit,
+                    Link, Label, Image
+                    )
+                    values
+                    (%s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s,
+                    %s, %s
+                    )
+                """
+            db.execute(
+                SQL,
+                (
+                    Username,
+                    Ingredients,
+                    Calories,
+                    Servings,
+                    Carbs_name,
+                    Carbs_value,
+                    Carbs_unit,
+                    Fat_name,
+                    Fat_value,
+                    Fat_unit,
+                    Protein_name,
+                    Protein_value,
+                    Protein_unit,
+                    Sugars_name,
+                    Sugars_value,
+                    Sugars_unit,
+                    Fiber_name,
+                    Fiber_value,
+                    Fiber_unit,
+                    Link,
+                    Label,
+                    Image,
+                ),
+            )
+        return render_template("dashboard.html", title="Dashboard", errors=errors)
+    else:
+        return redirect("/login")
+
 
 def check_email_exists(email):
     with DBcm.UseDatabase(config) as d:
@@ -123,9 +166,10 @@ def check_email_exists(email):
     else:
         return False
 
+
 @app.route("/processform", methods=["GET", "POST"])
 def processform():
-    errors  = []
+    errors = []
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
@@ -134,7 +178,7 @@ def processform():
     repeatpassword = repeatpassword.encode("utf-8")
     hashed_password = bcrypt.hashpw(password, salt)
     hashed_repeat_password = bcrypt.hashpw(repeatpassword, salt)
-    if password!=repeatpassword:
+    if password != repeatpassword:
         errors.append("Passwords do not match")
     if check_email_exists(email) == True:
         errors.append("Email already registered")
@@ -149,7 +193,7 @@ def processform():
 
             db.execute(SQL, (username, email, hashed_password))
         return redirect("/login")
-    return render_template("register.html", title="Welcome", errors = errors )
+    return render_template("register.html", title="Welcome", errors=errors)
 
 
 @app.route("/recipe")
@@ -196,11 +240,14 @@ def process():
     res = data["hits"]
 
     with ThreadPoolExecutor() as executor:
-        status_codes = list(executor.map(check_status, [row['recipe']['url'] for row in res]))
+        status_codes = list(
+            executor.map(check_status, [row["recipe"]["url"] for row in res])
+        )
         res = [row for i, row in enumerate(res) if status_codes[i] == 200]
     return render_template(
         "results.html", title="Suggested Recipes ", heading="Your Recipes", data=res
     )
+
 
 def check_status(url):
     return requests.get(url).status_code
