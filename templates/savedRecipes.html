@@ -1,5 +1,94 @@
 {% extends "base.html" %}
 {% block body %}
+<style>
+ 
+body {
+  background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
+  background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  position: relative;
+}
 
+.card-title {
+    margin-bottom: 0;
+}
+
+</style>
+{% if not res%}
+<p class="text-center">Sorry you have no Recipes Saved</p>
+{% else %}
+<div class="d-flex flex-wrap justify-content-evenly">
+{% for row in res %}
+<div class="position-relative border-0 card mb-5" style="width: 15rem;" >
+        <img class="img-thumbnail"  src="{{ row['recipe']['image'] }}" alt="Card image cap">
+        <div class="col-md-8">
+        <div class="card-body">
+            <h5 class="card-title">{{row['recipe']['label']}}</h5>
+        </div>
+        </div>
+
+    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#itemModal-{{ loop.index }}">
+        Click for More Info
+      </button>
+      
+     <!-- Modal -->
+  <div class="modal fade" id="itemModal-{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel-{{ loop.index }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="itemModalLabel-{{ loop.index }}">{{ row['recipe']['label'] }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <b>Ingredients:</b>
+          {% for row in row['recipe']['ingredientLines'] %} 
+          <br>
+          {{row}} 
+          {% endfor %}
+          <br>
+          <hr>
+          <b>Calories:</b> {{ (row['recipe']['calories'])|int }}
+          <b>Serving Size:</b> {{(row['recipe']['yield'])|int }}
+          <br>
+          <hr>
+          <b>Nutritional Information:</b>
+          <br>
+          {{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}
+          {{(row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int}}
+          {{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}
+          <br>
+          {{row['recipe']['totalNutrients']['FAT']['label']}}
+          {{(row['recipe']['totalNutrients']['FAT']['quantity'])|int}}
+          {{row['recipe']['totalNutrients']['FAT']['unit']}}
+          <br>
+          {{row['recipe']['totalNutrients']['PROCNT']['label']}}
+          {{(row['recipe']['totalNutrients']['PROCNT']['quantity'])|int}}
+          {{row['recipe']['totalNutrients']['PROCNT']['unit']}}
+          <br>
+          {{row['recipe']['totalNutrients']['SUGAR']['label']}}
+          {{(row['recipe']['totalNutrients']['SUGAR']['quantity'])|int}}
+          {{row['recipe']['totalNutrients']['SUGAR']['unit']}}
+          <br>
+          {{row['recipe']['totalNutrients']['FIBTG']['label']}}
+          {{(row['recipe']['totalNutrients']['FIBTG']['quantity'])|int}}
+          {{row['recipe']['totalNutrients']['FIBTG']['unit']}}
+          <hr>
+          <a href="{{ row['recipe']['url'] }}" target="_blank" class="btn btn-outline-success">Get Instructions</a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
     

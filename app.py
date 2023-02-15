@@ -27,14 +27,16 @@ def register():
     return render_template("register.html", title="Welcome")
 
 
-@app.route("/savedRecipe")
-def savedRecipe():
+@app.route("/savedRecipes")
+def savedRecipes():
     email = session.get("email", None)
     if email is not None:
         with DBcm.UseDatabase(config) as db:
             SQL = """select * from saved_recipes where Email = %s"""
             db.execute(SQL, (email,))
-        return render_template("savedRecipe.html", title="Saved Recipe")
+            res = db.fetchall()
+            print(res)
+        return render_template("savedRecipes.html", title="Saved Recipe", res=res)
     else:
         return redirect("/login")
 
@@ -72,6 +74,7 @@ def login():
             passres = bcrypt.checkpw(Userpassword, hashedDB)
             if res and passres:
                 session["username"] = username
+                session["email"] = email
                 return redirect("/dashboard")
             else:
                 errors = "Username/Password are incorrect"
@@ -81,7 +84,7 @@ def login():
 @app.route("/addrecipe", methods=["GET", "POST"])
 def addrecipe():
     errors = []
-    Ingredients = request.form.get("Ingredients")
+    Ingredients = request.form.get("Ingredients").strip("[]")
     Calories = request.form.get("Calories")
     Servings = request.form.get("Servings")
     Carbs_name = request.form.get("Carbs name")
@@ -103,12 +106,13 @@ def addrecipe():
     Label = request.form.get("Label")
     Image = request.form.get("Image")
     Username = session.get("username", None)
+    Email = session.get("email", None)
 
-    if Username is not None:
+    if Username and Email is not None:
         with DBcm.UseDatabase(config) as db:
             SQL = """
                     insert into saved_recipes
-                    (Username, Ingredients, Calories, Servings,
+                    (Username, Email, Ingredients, Calories, Servings,
                     Carbs_name, Carbs_value, Carbs_unit, 
                     Fat_name, Fat_value, Fat_unit,
                     Protein_name, Protein_value, Protein_unit,
@@ -121,13 +125,14 @@ def addrecipe():
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
-                    %s, %s
+                    %s, %s, %s
                     )
                 """
             db.execute(
                 SQL,
                 (
                     Username,
+                    Email,
                     Ingredients,
                     Calories,
                     Servings,
