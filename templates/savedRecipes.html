@@ -79,6 +79,13 @@ body {
           {{row[19]}}
           <hr>
           <a href="{{ row[20] }}" target="_blank" class="btn btn-outline-success">Get Instructions</a>
+          <br>
+          <br>
+          <!--Session to store the link so it can be used for delete-->
+          <form action="/deleteRecipe" method="post">
+            <input type="hidden" name="Link" value="{{ row[20] }}">
+            <button type="submit" class="btn btn-danger">Delete Recipe</button>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

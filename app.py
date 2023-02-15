@@ -27,6 +27,22 @@ def register():
     return render_template("register.html", title="Welcome")
 
 
+@app.route("/deleteRecipe", methods=["GET", "POST"])
+def deleteRecipe():
+    email = session.get("email", None)
+    url = request.form.get("Link")
+    if email is not None:
+        print(email)
+        print(url)
+        with DBcm.UseDatabase(config) as db:
+            SQL = """delete from saved_recipes where Email = %s and Link = %s"""
+            data = (email, url)
+            db.execute(SQL, data)
+        return redirect("/dashboard")
+    else:
+        return redirect("/login")
+
+
 @app.route("/savedRecipes")
 def savedRecipes():
     email = session.get("email", None)
@@ -35,7 +51,6 @@ def savedRecipes():
             SQL = """select * from saved_recipes where Email = %s"""
             db.execute(SQL, (email,))
             res = db.fetchall()
-            print(res)
         return render_template(
             "savedRecipes.html",
             title="Saved Recipe",
