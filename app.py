@@ -36,7 +36,12 @@ def savedRecipes():
             db.execute(SQL, (email,))
             res = db.fetchall()
             print(res)
-        return render_template("savedRecipes.html", title="Saved Recipe", res=res)
+        return render_template(
+            "savedRecipes.html",
+            title="Saved Recipe",
+            res=res,
+            heading="Your Saved Recipes",
+        )
     else:
         return redirect("/login")
 
@@ -182,7 +187,6 @@ def processform():
     password = password.encode("utf-8")
     repeatpassword = repeatpassword.encode("utf-8")
     hashed_password = bcrypt.hashpw(password, salt)
-    hashed_repeat_password = bcrypt.hashpw(repeatpassword, salt)
     if password != repeatpassword:
         errors.append("Passwords do not match")
     if check_email_exists(email) == True:
