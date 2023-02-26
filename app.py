@@ -4,17 +4,18 @@ import secrets
 import DBcm
 import bcrypt
 from concurrent.futures import ThreadPoolExecutor
+from appconfig import config
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
-config = {
-    "host": "localhost",
-    "database": "macro_meals_db",
-    "user": "root",
-    "password": "macro_meals_password",
-}
+# config = {
+#     "host": "localhost",
+#     "database": "macro_meals_db",
+#     "user": "root",
+#     "password": "macro_meals_password",
+# }
 
 
 @app.route("/")
@@ -32,8 +33,6 @@ def deleteRecipe():
     email = session.get("email", None)
     url = request.form.get("Link")
     if email is not None:
-        print(email)
-        print(url)
         with DBcm.UseDatabase(config) as db:
             SQL = """delete from saved_recipes where Email = %s and Link = %s"""
             data = (email, url)
@@ -176,7 +175,7 @@ def addrecipe():
                     Image,
                 ),
             )
-        return render_template("dashboard.html", title="Dashboard", errors=errors)
+        return redirect("/dashboard")
     else:
         return redirect("/login")
 
@@ -202,7 +201,8 @@ def processform():
     password = password.encode("utf-8")
     repeatpassword = repeatpassword.encode("utf-8")
     hashed_password = bcrypt.hashpw(password, salt)
-    if password != repeatpassword:
+    hashed_password_r = bcrypt.hashpw(repeatpassword, salt)
+    if hashed_password != hashed_password_r:
         errors.append("Passwords do not match")
     if check_email_exists(email) == True:
         errors.append("Email already registered")
