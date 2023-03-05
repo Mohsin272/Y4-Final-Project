@@ -14,7 +14,7 @@ if where == -1:
 else:
     #on Python Anywhere
     config = {
-        "host": "C00250220.mysql.pythonanywhere-services.com",
+        "host": "Mohsin272.mysql.pythonanywhere-services.com",
         "database": "Mohsin272$macro_meals_db",
         "user": "Mohsin272",
         "password": "macromealsdbpassword",

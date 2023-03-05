@@ -1,3 +1,6 @@
-        password = request.form.get("password")
-        password = password.encode('utf-8')
-        hashed_password = bcrypt.hashpw(password, salt)
+# config = {
+#     "host": "localhost",
+#     "database": "macro_meals_db",
+#     "user": "root",
+#     "password": "macro_meals_password",
+# }

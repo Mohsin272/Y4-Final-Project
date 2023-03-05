@@ -272,9 +272,13 @@ def process():
         "results.html", title="Suggested Recipes ", heading="Your Recipes", data=res
     )
 
-
 def check_status(url):
-    return requests.get(url).status_code
+    try:
+        response = requests.get(url).status_code
+        return response
+    except:
+        return 0
+    #return requests.get(url).status_code
 
 
 if __name__ == "__main__":  # pragma no cover
