@@ -1,122 +1,263 @@
-{% extends "base.html" %}
-{% block body %}
+{% extends "base.html" %} {% block body %}
 <style>
- 
-body {
-  background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
-  background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  position: relative;
-}
+  body {
+    background: linear-gradient(to bottom, #89ffde 0%, #8f4bff 100%) no-repeat
+      fixed;
+    background: url("{{url_for('static', filename='green.jpg')}}") no-repeat
+      center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+  }
 
-.card-title {
+  .card-title {
     margin-bottom: 0;
-}
-
+  }
 </style>
 {% if not data%}
 <p class="text-center">Sorry no recipes found with your inputted ingredients</p>
 {% else %}
 <div class="d-flex flex-wrap justify-content-evenly">
-{% for row in data %}
-<div class="position-relative border-0 card mb-5" style="width: 15rem;" >
-        <img class="img-thumbnail"  src="{{ row['recipe']['image'] }}" alt="Card image cap">
-        <div class="col-md-8">
-        <div class="card-body">
-            <h5 class="card-title">{{row['recipe']['label']}}</h5>
-        </div>
-        </div>
+  {% for row in data %}
+  <div class="position-relative border-0 card mb-5" style="width: 15rem">
+    <img
+      class="img-thumbnail"
+      src="{{ row['recipe']['image'] }}"
+      alt="Card image cap"
+    />
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{row['recipe']['label']}}</h5>
+      </div>
+    </div>
 
-    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#itemModal-{{ loop.index }}">
-        Click for More Info
-      </button>
-      
-     <!-- Modal -->
-  <div class="modal fade" id="itemModal-{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel-{{ loop.index }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="itemModalLabel-{{ loop.index }}">{{ row['recipe']['label'] }}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <b>Ingredients:</b>
-          {% for row in row['recipe']['ingredientLines'] %} 
-          <br>
-          {{row}} 
-          {% endfor %}
-          <br>
-          <hr>
-          <b>Calories:</b> {{ (row['recipe']['calories'])|int }}
-          <b>Serving Size:</b> {{(row['recipe']['yield'])|int }}
-          <br>
-          <hr>
-          <b>Nutritional Information:</b>
-          <br>
-          {{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}
-          {{(row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int}}
-          {{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}
-          <br>
-          {{row['recipe']['totalNutrients']['FAT']['label']}}
-          {{(row['recipe']['totalNutrients']['FAT']['quantity'])|int}}
-          {{row['recipe']['totalNutrients']['FAT']['unit']}}
-          <br>
-          {{row['recipe']['totalNutrients']['PROCNT']['label']}}
-          {{(row['recipe']['totalNutrients']['PROCNT']['quantity'])|int}}
-          {{row['recipe']['totalNutrients']['PROCNT']['unit']}}
-          <br>
-          {{row['recipe']['totalNutrients']['SUGAR']['label']}}
-          {{(row['recipe']['totalNutrients']['SUGAR']['quantity'])|int}}
-          {{row['recipe']['totalNutrients']['SUGAR']['unit']}}
-          <br>
-          {{row['recipe']['totalNutrients']['FIBTG']['label']}}
-          {{(row['recipe']['totalNutrients']['FIBTG']['quantity'])|int}}
-          {{row['recipe']['totalNutrients']['FIBTG']['unit']}}
-          <hr>
-          <a href="{{ row['recipe']['url'] }}" target="_blank" class="btn btn-outline-success">Get Instructions</a>
-          <form action="/addrecipe" method="post">
-            <!--
+    <button
+      type="button"
+      class="btn btn-dark"
+      data-toggle="modal"
+      data-target="#itemModal-{{ loop.index }}"
+    >
+      Click for More Info
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="itemModal-{{ loop.index }}"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="itemModalLabel-{{ loop.index }}"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="itemModalLabel-{{ loop.index }}">
+              {{ row['recipe']['label'] }}
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <b>Ingredients:</b>
+            {% for row in row['recipe']['ingredientLines'] %}
+            <br />
+            {{row}} {% endfor %}
+            <br />
+            <hr />
+            <b>Calories:</b> {{ (row['recipe']['calories'])|int }}
+            <br />
+            <b>Serving Size:</b> {{(row['recipe']['yield'])|int }}
+            <br />
+            <b>Calories per person:</b> {{((row['recipe']['calories'])|int / (row['recipe']['yield'])|int) |int }}
+            <br />
+            <hr />
+            <b>Nutritional Information:</b>
+            <br />
+            {{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}
+            {{(row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int}}
+            {{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['FAT']['label']}}
+            {{(row['recipe']['totalNutrients']['FAT']['quantity'])|int}}
+            {{row['recipe']['totalNutrients']['FAT']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['PROCNT']['label']}}
+            {{(row['recipe']['totalNutrients']['PROCNT']['quantity'])|int}}
+            {{row['recipe']['totalNutrients']['PROCNT']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['SUGAR']['label']}}
+            {{(row['recipe']['totalNutrients']['SUGAR']['quantity'])|int}}
+            {{row['recipe']['totalNutrients']['SUGAR']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['FIBTG']['label']}}
+            {{(row['recipe']['totalNutrients']['FIBTG']['quantity'])|int}}
+            {{row['recipe']['totalNutrients']['FIBTG']['unit']}}
+            <hr />
+            <b>Nutritional Breakdown per serving:</b>
+            <br />
+            {{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}
+            {{((row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['FAT']['label']}}
+            {{((row['recipe']['totalNutrients']['FAT']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{row['recipe']['totalNutrients']['FAT']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['PROCNT']['label']}}
+            {{((row['recipe']['totalNutrients']['PROCNT']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{row['recipe']['totalNutrients']['PROCNT']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['SUGAR']['label']}}
+            {{((row['recipe']['totalNutrients']['SUGAR']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{row['recipe']['totalNutrients']['SUGAR']['unit']}}
+            <br />
+            {{row['recipe']['totalNutrients']['FIBTG']['label']}}
+            {{((row['recipe']['totalNutrients']['FIBTG']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{row['recipe']['totalNutrients']['FIBTG']['unit']}}
+            <hr />
+            <a
+              href="{{ row['recipe']['url'] }}"
+              target="_blank"
+              class="btn btn-outline-success"
+              >Get Instructions</a
+            >
+            <form action="/addrecipe" method="post">
+              <!--
               Hidden fields to hold all recipe information so it can be called by the save recipe function
             -->
-            <input type="hidden" name="Username" value="">
-            <input type="hidden" name="Ingredients" value="{{row['recipe']['ingredientLines']}}">
-            <input type="hidden" name="Calories" value="{{(row['recipe']['calories'])|int }}">
-            <input type="hidden" name="Servings" value="{{(row['recipe']['yield'])|int }}">
-            <input type="hidden" name="Carbs name" value="{{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}">
-            <input type="hidden" name="Carbs value" value="{{(row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int}}">
-            <input type="hidden" name="Carbs unit" value="{{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}">
-            <input type="hidden" name="Fat name" value="{{row['recipe']['totalNutrients']['FAT']['label']}}">
-            <input type="hidden" name="Fat value" value="{{(row['recipe']['totalNutrients']['FAT']['quantity'])|int}}">
-            <input type="hidden" name="Fat unit" value="{{row['recipe']['totalNutrients']['FAT']['unit']}}">
-            <input type="hidden" name="Protein name" value="{{row['recipe']['totalNutrients']['PROCNT']['label']}}">
-            <input type="hidden" name="Protein value" value="{{(row['recipe']['totalNutrients']['PROCNT']['quantity'])|int}}">
-            <input type="hidden" name="Protein unit" value="{{row['recipe']['totalNutrients']['PROCNT']['unit']}}">
-            <input type="hidden" name="Sugars name" value="{{row['recipe']['totalNutrients']['SUGAR']['label']}}">
-            <input type="hidden" name="Sugars value" value="{{(row['recipe']['totalNutrients']['SUGAR']['quantity'])|int}}">
-            <input type="hidden" name="Sugars unit" value="{{row['recipe']['totalNutrients']['SUGAR']['unit']}}">
-            <input type="hidden" name="Fiber name" value="{{row['recipe']['totalNutrients']['FIBTG']['label']}}">
-            <input type="hidden" name="Fiber value" value="{{(row['recipe']['totalNutrients']['FIBTG']['quantity'])|int}}">
-            <input type="hidden" name="Fiber unit" value="{{row['recipe']['totalNutrients']['FIBTG']['unit']}}">
-            <input type="hidden" name="Link" value="{{ row['recipe']['url'] }}">
-            <input type="hidden" name="Label" value="{{ row['recipe']['label'] }}">
-            <input type="hidden" name="Image" value="{{ row['recipe']['image'] }}">
-          <button type="submit" class="btn btn-outline-info">Save Recipe</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="hidden" name="Username" value="" />
+              <input
+                type="hidden"
+                name="Ingredients"
+                value="{{row['recipe']['ingredientLines']}}"
+              />
+              <input
+                type="hidden"
+                name="Calories"
+                value="{{(row['recipe']['calories'])|int }}"
+              />
+              <input
+                type="hidden"
+                name="Servings"
+                value="{{(row['recipe']['yield'])|int }}"
+              />
+              <input
+                type="hidden"
+                name="Carbs name"
+                value="{{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}"
+              />
+              <input
+                type="hidden"
+                name="Carbs value"
+                value="{{(row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int}}"
+              />
+              <input
+                type="hidden"
+                name="Carbs unit"
+                value="{{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}"
+              />
+              <input
+                type="hidden"
+                name="Fat name"
+                value="{{row['recipe']['totalNutrients']['FAT']['label']}}"
+              />
+              <input
+                type="hidden"
+                name="Fat value"
+                value="{{(row['recipe']['totalNutrients']['FAT']['quantity'])|int}}"
+              />
+              <input
+                type="hidden"
+                name="Fat unit"
+                value="{{row['recipe']['totalNutrients']['FAT']['unit']}}"
+              />
+              <input
+                type="hidden"
+                name="Protein name"
+                value="{{row['recipe']['totalNutrients']['PROCNT']['label']}}"
+              />
+              <input
+                type="hidden"
+                name="Protein value"
+                value="{{(row['recipe']['totalNutrients']['PROCNT']['quantity'])|int}}"
+              />
+              <input
+                type="hidden"
+                name="Protein unit"
+                value="{{row['recipe']['totalNutrients']['PROCNT']['unit']}}"
+              />
+              <input
+                type="hidden"
+                name="Sugars name"
+                value="{{row['recipe']['totalNutrients']['SUGAR']['label']}}"
+              />
+              <input
+                type="hidden"
+                name="Sugars value"
+                value="{{(row['recipe']['totalNutrients']['SUGAR']['quantity'])|int}}"
+              />
+              <input
+                type="hidden"
+                name="Sugars unit"
+                value="{{row['recipe']['totalNutrients']['SUGAR']['unit']}}"
+              />
+              <input
+                type="hidden"
+                name="Fiber name"
+                value="{{row['recipe']['totalNutrients']['FIBTG']['label']}}"
+              />
+              <input
+                type="hidden"
+                name="Fiber value"
+                value="{{(row['recipe']['totalNutrients']['FIBTG']['quantity'])|int}}"
+              />
+              <input
+                type="hidden"
+                name="Fiber unit"
+                value="{{row['recipe']['totalNutrients']['FIBTG']['unit']}}"
+              />
+              <input
+                type="hidden"
+                name="Link"
+                value="{{ row['recipe']['url'] }}"
+              />
+              <input
+                type="hidden"
+                name="Label"
+                value="{{ row['recipe']['label'] }}"
+              />
+              <input
+                type="hidden"
+                name="Image"
+                value="{{ row['recipe']['image'] }}"
+              />
+              <button type="submit" class="btn btn-outline-info">
+                Save Recipe
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-    </div>
-    {% endfor %}
-    {% endif %}
+  {% endfor %} {% endif %}
 </div>
 {% endblock %}
-    

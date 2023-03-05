@@ -1,21 +1,16 @@
-{% extends "base.html" %}
-{% block body %}
+{% extends "base.html" %} {% block body %}
 <style>
-/* Add a hover effect to the button */
-.btn:hover {
-  transform: scale(1.1);
-}
-
+  /* Add a hover effect to the button */
+  .btn:hover {
+    transform: scale(1.1);
+  }
 </style>
 <div class="text-center">
-
-<br>
-<div class="btn-group" role="group" aria-label="Basic example">
-  <a href="/recipe" class="btn btn-dark">Receive a Personalised Recipe</a>
-  <a href="/savedRecipes" class="btn btn-dark">Saved Recipes</a>
-<a href="/logout" class="btn btn-danger">Logout</a>
-</div>
-
+  <br />
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <a href="/recipe" class="btn btn-dark">Receive a Personalised Recipe</a>
+    <a href="/savedRecipes" class="btn btn-dark">Saved Recipes</a>
+    <a href="/logout" class="btn btn-danger">Logout</a>
+  </div>
 </div>
 {% endblock %}
-    
