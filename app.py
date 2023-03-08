@@ -5,18 +5,11 @@ import DBcm
 import bcrypt
 from concurrent.futures import ThreadPoolExecutor
 from appconfig import config
+import re
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
-
-# config = {
-#     "host": "localhost",
-#     "database": "macro_meals_db",
-#     "user": "root",
-#     "password": "macro_meals_password",
-# }
-
 
 @app.route("/")
 def index():
@@ -79,6 +72,8 @@ def logout():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if "username"  in session:
+        return redirect("/dashboard")
     errors = ""
     if request.method == "POST":
         username = request.form.get("username")
@@ -231,8 +226,8 @@ def edamam():
 
 @app.route("/recipe", methods=["GET", "POST"])
 def process():
-    app_id = "41124d1e"
-    app_key = "da107657cdc9a798f1921db69fe67581"
+    app_id = "9e0266d1"
+    app_key = "573469b41542adce2933662450986489"
     meal_type = request.form.getlist("mealcheck")
     meal_type = ",".join(meal_type)
     ingredients = request.form["ingredients"]
@@ -263,15 +258,49 @@ def process():
     data = result.json()
     res = data["hits"]
 
+    ingredients_list = []
+    res_list=[]
+    # Sample list of ingredients
+    for row in res:
+        for ing in row['recipe']['ingredientLines']:
+            ingredients_list.append(ing)
+        value=get_carbon_value(ingredients_list)
+        res_list.append(value)
+
     with ThreadPoolExecutor() as executor:
         status_codes = list(
             executor.map(check_status, [row["recipe"]["url"] for row in res])
         )
         res = [row for i, row in enumerate(res) if status_codes[i] == 200]
     return render_template(
-        "results.html", title="Suggested Recipes ", heading="Your Recipes", data=res
+        "results.html", title="Suggested Recipes ", heading="Your Recipes", data=res, cfv=res_list
     )
 
+def get_carbon_value(ingredients_list):
+        # Read ingredients to match from file
+    with open('high_carbon.txt', 'r') as f:
+        ingredients_to_match = [line.strip() for line in f.readlines()]
+
+    # Define a regular expression pattern to extract ingredient names
+    ingredient_pattern = re.compile(r'^\d*\s*(?:\d+\/\d+\s*)?(?:cup|tsp|tbsp)?\s*(.*)')
+
+    # Extract ingredient names from the list
+    ingredient_names=[]
+    for ingredient in ingredients_list:
+        match = ingredient_pattern.match(ingredient)
+        if match:
+            ingredient_names.append(match.group(1))
+
+    # Count the number of matching ingredients
+    matches = sum(1 for ingredient in ingredient_names if any(match in ingredient for match in ingredients_to_match))
+
+    # Display the result
+    if matches > 4:
+        return "RED"
+    elif matches < 4 and matches > 2:
+        return "AMBER"
+    else:
+        return "GREEN"
 def check_status(url):
     try:
         response = requests.get(url).status_code

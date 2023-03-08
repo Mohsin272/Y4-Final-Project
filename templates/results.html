@@ -21,6 +21,7 @@
 {% else %}
 <div class="d-flex flex-wrap justify-content-evenly">
   {% for row in data %}
+  
   <div class="position-relative border-0 card mb-5" style="width: 15rem">
     <img
       class="img-thumbnail"
@@ -29,10 +30,16 @@
     />
     <div class="col-md-8">
       <div class="card-body">
+        {% set printed_vals = [] %}
+        {% for val in cfv %}
+          {% if val not in printed_vals %}
+            <h5 class="card-title">{{val}}</h5>
+            {% set _ = printed_vals.append(val) %}
+          {% endif %}
+        {% endfor %}
         <h5 class="card-title">{{row['recipe']['label']}}</h5>
       </div>
     </div>
-
     <button
       type="button"
       class="btn btn-dark"
