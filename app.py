@@ -295,9 +295,9 @@ def get_carbon_value(ingredients_list):
     matches = sum(1 for ingredient in ingredient_names if any(match in ingredient for match in ingredients_to_match))
 
     # Display the result
-    if matches > 4:
+    if matches > 3:
         return "RED"
-    elif matches < 4 and matches > 2:
+    elif matches < 3 and matches > 2:
         return "AMBER"
     else:
         return "GREEN"

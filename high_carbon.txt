@@ -12,3 +12,6 @@ Tuna
 Shrimp
 Soybeans
 Rice
+Chicken
+Peas
+Corn
