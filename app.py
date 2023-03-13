@@ -83,15 +83,18 @@ def login():
             SQL = """select * from users where Email = %s"""
             db.execute(SQL, (email,))
             res = db.fetchall()
-            Userpassword = Userpassword.encode("utf-8")
-            hashedDB = res[0][3].encode("utf-8")
-            passres = bcrypt.checkpw(Userpassword, hashedDB)
-            if res and passres:
-                session["username"] = username
-                session["email"] = email
-                return redirect("/dashboard")
+            if res:
+                Userpassword = Userpassword.encode("utf-8")
+                hashedDB = res[0][3].encode("utf-8")
+                passres = bcrypt.checkpw(Userpassword, hashedDB)
+                if res and passres:
+                    session["username"] = username
+                    session["email"] = email
+                    return redirect("/dashboard")
+                else:
+                    errors = "Username/Password are incorrect"
             else:
-                errors = "Username/Password are incorrect"
+                errors = "User does not exist"
     return render_template("login.html", title="Welcome", errors=errors)
 
 
