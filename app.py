@@ -283,6 +283,7 @@ def get_carbon_value(ingredients_list):
         # Read ingredients to match from file
     with open('high_carbon.txt', 'r') as f:
         ingredients_to_match = [line.strip() for line in f.readlines()]
+        # https://ourworldindata.org/food-choice-vs-eating-local
 
     # Define a regular expression pattern to extract ingredient names
     ingredient_pattern = re.compile(r'^\d*\s*(?:\d+\/\d+\s*)?(?:cup|tsp|tbsp)?\s*(.*)')
@@ -298,9 +299,9 @@ def get_carbon_value(ingredients_list):
     matches = sum(1 for ingredient in ingredient_names if any(match in ingredient for match in ingredients_to_match))
 
     # Display the result
-    if matches > 3:
+    if matches >= 3:
         return "RED"
-    elif matches < 3 and matches > 2:
+    elif matches <= 2 and matches > 1:
         return "AMBER"
     else:
         return "GREEN"

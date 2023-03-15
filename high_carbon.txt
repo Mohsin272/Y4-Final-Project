@@ -1,17 +1,42 @@
-Beef
-Lamb
-Cheese
-Pork
-Butter
-Chocolate
-Wine
-Coffee
-Salmon
+Apples
 Avocado
-Tuna
-Shrimp
-Soybeans
-Rice
+Bananas
+Barley
+Beef
+Beet Sugar
+Butter
+Cheese
 Chicken
-Peas
+Chocolate
+Citrus Fruit
+Coffee
 Corn
+Dark Chocolate
+Eggs
+Lamb
+Leeks
+Maize
+Milk
+Mutton
+Nuts
+Oatmeal
+Olive Oil
+Onions
+Palm Oil
+Peas
+Pork
+Potatoes
+Poultry Meat
+Rapeseed Oil
+Rice
+Salmon
+Shrimp
+Soy milk
+Soybean Oil
+Soybeans
+Sunflower Oil
+Tofu
+Tomatoes
+Tuna
+Wheat & Rye
+Wine
