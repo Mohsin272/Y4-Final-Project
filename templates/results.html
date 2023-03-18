@@ -16,106 +16,58 @@
     margin-bottom: 0;
   }
   .traffic-light {
-  width: 120px;
-  height: 30px;
-  background-color: black;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-}
+    width: 120px;
+    height: 30px;
+    background-color: black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
 
-.light {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
+  .light {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
 
-.red {
-  background-color: red;
-}
+  .red {
+    background-color: red;
+  }
 
-.yellow {
-  background-color: yellow;
-}
+  .yellow {
+    background-color: yellow;
+  }
 
-.green {
-  background-color: green;
-}
+  .green {
+    background-color: green;
+  }
 
-.activelight {
-  box-shadow: 0px 0px 5px #fff, 0px 0px 10px #fff, 0px 0px 15px #fff;
-  animation: glow 1s infinite;
-}
-
-@keyframes glow {
-  0% {
+  .activelight {
     box-shadow: 0px 0px 5px #fff, 0px 0px 10px #fff, 0px 0px 15px #fff;
+    animation: glow 1s infinite;
   }
-  50% {
-    box-shadow: 0px 0px 5px #0f0, 0px 0px 10px #0f0, 0px 0px 15px #0f0;
+
+  @keyframes glow {
+    0% {
+      box-shadow: 0px 0px 5px #fff, 0px 0px 10px #fff, 0px 0px 15px #fff;
+    }
+    50% {
+      box-shadow: 0px 0px 5px #0f0, 0px 0px 10px #0f0, 0px 0px 15px #0f0;
+    }
+    100% {
+      box-shadow: 0px 0px 5px #fff, 0px 0px 10px #fff, 0px 0px 15px #fff;
+    }
   }
-  100% {
-    box-shadow: 0px 0px 5px #fff, 0px 0px 10px #fff, 0px 0px 15px #fff;
-  }
-}
-
-  /* .traffic-light {
-  width: 80px;
-  height: 200px;
-  background-color: black;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.light {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-}
-
-.red {
-  background-color: red;
-}
-
-.yellow {
-  background-color: yellow;
-}
-
-.green {
-  background-color: green;
-}
-
-.activelight {
-  box-shadow: 0px 0px 20px #fff, 0px 0px 40px #fff, 0px 0px 60px #fff;
-  animation: glow 1s infinite;
-}
-
-@keyframes glow {
-  0% {
-    box-shadow: 0px 0px 20px #fff, 0px 0px 40px #fff, 0px 0px 60px #fff;
-  }
-  50% {
-    box-shadow: 0px 0px 20px #0f0, 0px 0px 40px #0f0, 0px 0px 60px #0f0;
-  }
-  100% {
-    box-shadow: 0px 0px 20px #fff, 0px 0px 40px #fff, 0px 0px 60px #fff;
-  }
-} */
-
-  
 </style>
 {% if not data%}
 <p class="text-center">Sorry no recipes found with your inputted ingredients</p>
 {% else %}
 <div class="d-flex flex-wrap justify-content-evenly">
   {% for row in data %}
-  
-  <div class="position-relative border-0 card mb-5" style="width: 17rem;" >
+
+  <div class="position-relative border-0 card mb-5" style="width: 17rem">
     <img
       class="img-thumbnail"
       src="{{ row['recipe']['image'] }}"
@@ -123,33 +75,27 @@
     />
     <div class="col-md-8">
       <div class="card-body">
-        {% set printed_vals = [] %}
-        {% for val in cfv %}
-          {% if val not in printed_vals %}
-            {% if val == 'GREEN' %}
-            <div class="traffic-light">
-              <div class="light red"></div>
-              <div class="light yellow"></div>
-              <div class="light green activelight"></div>
-            </div>
-            {% endif %}
-            {% if val == 'AMBER' %}
-            <div class="traffic-light">
-              <div class="light red"></div>
-              <div class="light yellow activelight"></div>
-              <div class="light green"></div>
-            </div>
-            {% endif %}
-            {% if val == 'RED' %}
-            <div class="traffic-light">
-              <div class="light red activelight"></div>
-              <div class="light yellow"></div>
-              <div class="light green"></div>
-            </div>
-            {% endif %}
-            {% set _ = printed_vals.append(val) %}
-          {% endif %}
-        {% endfor %}
+        {% set printed_vals = [] %} {% for val in cfv %} {% if val not in
+        printed_vals %} {% if val == 'GREEN' %}
+        <div class="traffic-light">
+          <div class="light red"></div>
+          <div class="light yellow"></div>
+          <div class="light green activelight"></div>
+        </div>
+        {% endif %} {% if val == 'AMBER' %}
+        <div class="traffic-light">
+          <div class="light red"></div>
+          <div class="light yellow activelight"></div>
+          <div class="light green"></div>
+        </div>
+        {% endif %} {% if val == 'RED' %}
+        <div class="traffic-light">
+          <div class="light red activelight"></div>
+          <div class="light yellow"></div>
+          <div class="light green"></div>
+        </div>
+        {% endif %} {% set _ = printed_vals.append(val) %} {% endif %} {% endfor
+        %}
         <h5 class="card-title">{{row['recipe']['label']}}</h5>
       </div>
     </div>
@@ -195,29 +141,35 @@
             <hr />
             <b>Serving Size:</b> {{(row['recipe']['yield'])|int }}
             <br />
-            <b>Calories per person:</b> {{((row['recipe']['calories'])|int / (row['recipe']['yield'])|int) |int }}
+            <b>Calories per person:</b> {{((row['recipe']['calories'])|int /
+            (row['recipe']['yield'])|int) |int }}
             <br />
             <hr />
             <b>Nutritional Breakdown per serving:</b>
             <br />
             {{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}
-            {{((row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{((row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int /
+            (row['recipe']['yield'])|int)|int}}
             {{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}
             <br />
             {{row['recipe']['totalNutrients']['FAT']['label']}}
-            {{((row['recipe']['totalNutrients']['FAT']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{((row['recipe']['totalNutrients']['FAT']['quantity'])|int /
+            (row['recipe']['yield'])|int)|int}}
             {{row['recipe']['totalNutrients']['FAT']['unit']}}
             <br />
             {{row['recipe']['totalNutrients']['PROCNT']['label']}}
-            {{((row['recipe']['totalNutrients']['PROCNT']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{((row['recipe']['totalNutrients']['PROCNT']['quantity'])|int /
+            (row['recipe']['yield'])|int)|int}}
             {{row['recipe']['totalNutrients']['PROCNT']['unit']}}
             <br />
             {{row['recipe']['totalNutrients']['SUGAR']['label']}}
-            {{((row['recipe']['totalNutrients']['SUGAR']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{((row['recipe']['totalNutrients']['SUGAR']['quantity'])|int /
+            (row['recipe']['yield'])|int)|int}}
             {{row['recipe']['totalNutrients']['SUGAR']['unit']}}
             <br />
             {{row['recipe']['totalNutrients']['FIBTG']['label']}}
-            {{((row['recipe']['totalNutrients']['FIBTG']['quantity'])|int / (row['recipe']['yield'])|int)|int}}
+            {{((row['recipe']['totalNutrients']['FIBTG']['quantity'])|int /
+            (row['recipe']['yield'])|int)|int}}
             {{row['recipe']['totalNutrients']['FIBTG']['unit']}}
             <hr />
             <a
@@ -239,7 +191,7 @@
               <input
                 type="hidden"
                 name="Calories"
-                value="{{(row['recipe']['calories'])|int }}"
+                value="{{((row['recipe']['calories'])|int / (row['recipe']['yield'])|int) |int }}"
               />
               <input
                 type="hidden"
@@ -254,7 +206,7 @@
               <input
                 type="hidden"
                 name="Carbs value"
-                value="{{(row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int}}"
+                value=" {{((row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
               />
               <input
                 type="hidden"
@@ -269,7 +221,7 @@
               <input
                 type="hidden"
                 name="Fat value"
-                value="{{(row['recipe']['totalNutrients']['FAT']['quantity'])|int}}"
+                value=" {{((row['recipe']['totalNutrients']['FAT']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
               />
               <input
                 type="hidden"
@@ -284,7 +236,7 @@
               <input
                 type="hidden"
                 name="Protein value"
-                value="{{(row['recipe']['totalNutrients']['PROCNT']['quantity'])|int}}"
+                value=" {{((row['recipe']['totalNutrients']['PROCNT']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
               />
               <input
                 type="hidden"
@@ -299,7 +251,7 @@
               <input
                 type="hidden"
                 name="Sugars value"
-                value="{{(row['recipe']['totalNutrients']['SUGAR']['quantity'])|int}}"
+                value=" {{((row['recipe']['totalNutrients']['SUGAR']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
               />
               <input
                 type="hidden"
@@ -314,7 +266,7 @@
               <input
                 type="hidden"
                 name="Fiber value"
-                value="{{(row['recipe']['totalNutrients']['FIBTG']['quantity'])|int}}"
+                value=" {{((row['recipe']['totalNutrients']['FIBTG']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
               />
               <input
                 type="hidden"

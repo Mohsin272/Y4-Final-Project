@@ -1,101 +1,120 @@
-{% extends "base.html" %}
-{% block body %}
+{% extends "base.html" %} {% block body %}
 <style>
- 
-body {
-  background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
-  background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  position: relative;
-}
+  body {
+    background: linear-gradient(to bottom, #89ffde 0%, #8f4bff 100%) no-repeat
+      fixed;
+    background: url("{{url_for('static', filename='green.jpg')}}") no-repeat
+      center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+  }
 
-.card-title {
+  .card-title {
     margin-bottom: 0;
-}
-
+  }
 </style>
 {% if not res%}
 <p class="text-center">Sorry you have no Recipes Saved</p>
 {% else %}
 <div class="d-flex flex-wrap justify-content-evenly">
-{% for row in res %}
-<div class="position-relative border-0 card mb-5" style="width: 15rem;" >
-        <img class="img-thumbnail"  src="{{row[22]}}" alt="Card image cap">
-        <div class="col-md-8">
-        <div class="card-body">
-            <h5 class="card-title">{{row[21]}}</h5>
-        </div>
-        </div>
+  {% for row in res %}
+  <div class="position-relative border-0 card mb-5" style="width: 15rem">
+    <img class="img-thumbnail" src="{{row[22]}}" alt="Card image cap" />
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{row[21]}}</h5>
+      </div>
+    </div>
 
-    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#itemModal-{{ loop.index }}">
-        Click for More Info
-      </button>
-      
-     <!-- Modal -->
-  <div class="modal fade" id="itemModal-{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel-{{ loop.index }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="itemModalLabel-{{ loop.index }}">{{ row[21] }}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <b>Ingredients:</b>
-          {% for ing in row[2].split("', '") %}
-          <br>
-          {{ing.strip("'")}}
-          {% endfor %}
-          <br>
-          <hr>
-          <b>Calories:</b> {{ (row[3]) }}
-          <b>Serving Size:</b> {{(row[4]) }}
-          <br>
-          <hr>
-          <b>Nutritional Information:</b>
-          <br>
-          {{row[5]}}
-          {{(row[6])}}
-          {{row[7]}}
-          <br>
-          {{row[8]}}
-          {{(row[9])}}
-          {{row[10]}}
-          <br>
-          {{row[11]}}
-          {{row[12]}}
-          {{row[13]}}
-          <br>
-          {{row[14]}}
-          {{row[15]}}
-          {{row[16]}}
-          <br>
-          {{row[17]}}
-          {{row[18]}}
-          {{row[19]}}
-          <hr>
-          <a href="{{ row[20] }}" target="_blank" class="btn btn-outline-success">Get Instructions</a>
-          <br>
-          <br>
-          <!--Session to store the link so it can be used for delete-->
-          <form action="/deleteRecipe" method="post">
-            <input type="hidden" name="Link" value="{{ row[20] }}">
-            <button type="submit" class="btn btn-danger">Delete Recipe</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button
+      type="button"
+      class="btn btn-dark"
+      data-toggle="modal"
+      data-target="#itemModal-{{ loop.index }}"
+    >
+      Click for More Info
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="itemModal-{{ loop.index }}"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="itemModalLabel-{{ loop.index }}"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="itemModalLabel-{{ loop.index }}">
+              {{ row[21] }}
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <b>Ingredients:</b>
+            {% for ing in row[2].split("', '") %}
+            <br />
+            {{ing.strip("'")}} {% endfor %}
+            <br />
+            <hr />
+            <b>Calories per person:</b> {{ (row[3]) }}
+            <br />
+            <b>Serving Size:</b> {{(row[4]) }}
+            <br />
+            <hr />
+            <b>Nutritional Breakdown per serving:</b>
+            <br />
+            {{row[5]}} {{(row[6])}} {{row[7]}}
+            <br />
+            {{row[8]}} {{(row[9])}} {{row[10]}}
+            <br />
+            {{row[11]}} {{row[12]}} {{row[13]}}
+            <br />
+            {{row[14]}} {{row[15]}} {{row[16]}}
+            <br />
+            {{row[17]}} {{row[18]}} {{row[19]}}
+            <hr />
+            <a
+              href="{{ row[20] }}"
+              target="_blank"
+              class="btn btn-outline-success"
+              >Get Instructions</a
+            >
+            <br />
+            <br />
+            <!--Session to store the link so it can be used for delete-->
+            <form action="/deleteRecipe" method="post">
+              <input type="hidden" name="Link" value="{{ row[20] }}" />
+              <button type="submit" class="btn btn-danger">
+                Delete Recipe
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-    </div>
-    {% endfor %}
-    {% endif %}
+  {% endfor %} {% endif %}
 </div>
 {% endblock %}
-    
