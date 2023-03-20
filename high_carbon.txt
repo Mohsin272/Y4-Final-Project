@@ -1,14 +1,9 @@
-Apples
 Avocado
-Bananas
 Barley
 Beef
-Beet Sugar
-Butter
 Cheese
 Chicken
 Chocolate
-Citrus Fruit
 Coffee
 Corn
 Dark Chocolate
@@ -18,12 +13,7 @@ Leeks
 Maize
 Milk
 Mutton
-Nuts
-Oatmeal
-Olive Oil
-Onions
 Palm Oil
-Peas
 Pork
 Potatoes
 Poultry Meat
@@ -36,7 +26,5 @@ Soybean Oil
 Soybeans
 Sunflower Oil
 Tofu
-Tomatoes
 Tuna
-Wheat & Rye
 Wine

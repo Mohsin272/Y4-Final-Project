@@ -11,6 +11,7 @@ salt = bcrypt.gensalt()
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
+
 @app.route("/")
 def index():
     return render_template("index.html", title="Welcome")
@@ -72,7 +73,7 @@ def logout():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if "username"  in session:
+    if "username" in session:
         return redirect("/dashboard")
     errors = ""
     if request.method == "POST":
@@ -124,6 +125,7 @@ def addrecipe():
     Image = request.form.get("Image")
     Username = session.get("username", None)
     Email = session.get("email", None)
+    Carbon = request.form.get("carbon")
 
     if Username and Email is not None:
         with DBcm.UseDatabase(config) as db:
@@ -135,14 +137,14 @@ def addrecipe():
                     Protein_name, Protein_value, Protein_unit,
                     Sugars_name, Sugars_value, Sugars_unit,
                     Fiber_name, Fiber_value, Fiber_unit,
-                    Link, Label, Image
+                    Link, Label, Image, Carbon
                     )
                     values
                     (%s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
-                    %s, %s, %s
+                    %s, %s, %s, %s
                     )
                 """
             db.execute(
@@ -171,6 +173,7 @@ def addrecipe():
                     Link,
                     Label,
                     Image,
+                    Carbon,
                 ),
             )
         return redirect("/dashboard")
@@ -262,12 +265,12 @@ def process():
     res = data["hits"]
 
     ingredients_list = []
-    res_list=[]
+    res_list = []
     # Sample list of ingredients
     for row in res:
-        for ing in row['recipe']['ingredientLines']:
+        for ing in row["recipe"]["ingredientLines"]:
             ingredients_list.append(ing)
-        value=get_carbon_value(ingredients_list)
+        value = get_carbon_value(ingredients_list, items)
         res_list.append(value)
 
     with ThreadPoolExecutor() as executor:
@@ -276,43 +279,76 @@ def process():
         )
         res = [row for i, row in enumerate(res) if status_codes[i] == 200]
     return render_template(
-        "results.html", title="Suggested Recipes ", heading="Your Recipes", data=res, cfv=res_list
+        "results.html",
+        title="Suggested Recipes ",
+        heading="Your Recipes",
+        data=res,
+        cfv=res_list,
     )
 
-def get_carbon_value(ingredients_list):
-        # Read ingredients to match from file
-    with open('high_carbon.txt', 'r') as f:
-        ingredients_to_match = [line.strip() for line in f.readlines()]
-        # https://ourworldindata.org/food-choice-vs-eating-local
 
+def get_carbon_value(ingredients_list, high_carbon_ingredients):
     # Define a regular expression pattern to extract ingredient names
-    ingredient_pattern = re.compile(r'^\d*\s*(?:\d+\/\d+\s*)?(?:cup|tsp|tbsp)?\s*(.*)')
+    ingredient_pattern = re.compile(r"^\d*\s*(?:\d+\/\d+\s*)?(?:cup|tsp|tbsp)?\s*(.*)")
 
     # Extract ingredient names from the list
-    ingredient_names=[]
+    ingredient_names = []
     for ingredient in ingredients_list:
         match = ingredient_pattern.match(ingredient)
         if match:
-            ingredient_names.append(match.group(1))
+            ingredient_names.append(match.group(1).lower())  # Convert to lowercase
 
     # Count the number of matching ingredients
-    matches = sum(1 for ingredient in ingredient_names if any(match in ingredient for match in ingredients_to_match))
+    matches = sum(
+        1
+        for ingredient in ingredient_names
+        if any(match.lower() in ingredient for match in high_carbon_ingredients)
+    )
 
-    # Display the result
-    if matches >= 3:
+    # Return a color code based on the total number of matching ingredients
+    if matches >= 2:
         return "RED"
-    elif matches <= 2 and matches > 1:
-        return "AMBER"
     else:
         return "GREEN"
+
+
 def check_status(url):
     try:
         response = requests.get(url).status_code
         return response
     except:
         return 0
-    #return requests.get(url).status_code
 
+
+items = [
+    "Avocado",
+    "Barley",
+    "Beef",
+    "Cheese",
+    "Chicken",
+    "Chocolate",
+    "Coffee",
+    "Corn",
+    "Dark Chocolate",
+    "Lamb",
+    "Leeks",
+    "Maize",
+    "Mutton",
+    "Palm Oil",
+    "Pork",
+    "Potatoes",
+    "Poultry Meat",
+    "Rapeseed Oil",
+    "Salmon",
+    "Shrimp",
+    "Soy milk",
+    "Soybean Oil",
+    "Soybeans",
+    "Sunflower Oil",
+    "Tofu",
+    "Tuna",
+    "Wine",
+]
 
 if __name__ == "__main__":  # pragma no cover
     app.run(debug=True)
