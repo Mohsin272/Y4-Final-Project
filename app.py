@@ -31,7 +31,7 @@ def deleteRecipe():
             SQL = """delete from saved_recipes where Email = %s and Link = %s"""
             data = (email, url)
             db.execute(SQL, data)
-        return redirect("/dashboard")
+        return redirect("/recipe")
     else:
         return redirect("/login")
 
@@ -56,12 +56,13 @@ def savedRecipes():
 
 @app.route("/dashboard")
 def dashboard():
-    if "username" not in session:
-        return redirect("/login")
+    # if "username" not in session:
+    #     return redirect("/login")
     return render_template(
-        "dashboard.html",
-        title=session["username"] + " dashboard",
-        heading="Welcome, " + session["username"],
+        "edamam.html",
+        title=session["username"] + "'s Dashboard",
+        name=session["username"],
+        #heading="Welcome, " + session["username"],
     )
 
 
@@ -74,7 +75,7 @@ def logout():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if "username" in session:
-        return redirect("/dashboard")
+        return redirect("/recipe")
     errors = ""
     if request.method == "POST":
         username = request.form.get("username")
@@ -91,7 +92,7 @@ def login():
                 if res and passres:
                     session["username"] = username
                     session["email"] = email
-                    return redirect("/dashboard")
+                    return redirect("/recipe")
                 else:
                     errors = "Username/Password are incorrect"
             else:
@@ -176,7 +177,7 @@ def addrecipe():
                     Carbon,
                 ),
             )
-        return redirect("/dashboard")
+        return redirect("/recipe")
     else:
         return redirect("/login")
 
@@ -226,7 +227,7 @@ def edamam():
     return render_template(
         "edamam.html",
         title="Macro Meals",
-        heading="Enter the following for a Personalised Recipe",
+        #heading="Enter the following for a Personalised Recipe",
     )
 
 
@@ -281,7 +282,7 @@ def process():
     return render_template(
         "results.html",
         title="Suggested Recipes ",
-        heading="Your Recipes",
+        #heading="Your Recipes",
         data=res,
         cfv=res_list,
     )

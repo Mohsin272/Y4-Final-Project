@@ -1,397 +1,789 @@
-{% extends "base.html" %}
-{% block body %}
+{% extends "base.html" %} {% block body %}
 <style>
   body {
-  background:linear-gradient(to bottom, #89ffde 0%,#8f4bff 100%) no-repeat fixed;
-  background: url("{{url_for('static', filename='green.jpg')}}") no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  position: relative;
+    background: linear-gradient(to bottom, #89ffde 0%, #8f4bff 100%) no-repeat
+      fixed;
+    background: url("{{url_for('static', filename='green.jpg')}}") no-repeat
+      center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
   }
-  .dropdown{
+  .dropdown {
     width: 100%;
     text-align: center;
-}
+  }
 </style>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand">Macro Meals</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/recipe">Receive a Personalised Recipe</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/savedRecipes">Saved Recipes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-danger" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<br /><br /><br />
+<div class="text-center"><h1>Enter the following for a Personalised Recipe</h1></div>
 <div class="d-flex justify-content-center">
   <div class="text-left">
-    <br>
+    <br />
     <form method="post">
-      <label>Common Ingredients</label><br>
-        <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Vegetables
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="potato" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Potatoes
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="onion" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Onions
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="carrot" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Carrots
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="mushroom" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Mushrooms
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="broccoli" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Broccoli
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="peas" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Peas
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="cabbage" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Cabbage
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="lettuce" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Lettuce
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="peppers" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Peppers
-              </label>
-            </div>
-          </ul>
-        </div>
-        <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Fruits
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="tomato" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Tomato
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="apple" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Apple
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="banana" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Banana
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="orange" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Orange
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="pear" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Pear
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="avocado" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Avocado
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="grape" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Grapes
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="strawberry" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Strawberry
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="raspberry" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Raspberry
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="cherry" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Cherry
-              </label>
-            </div>
-          </ul>
-        </div>
-        <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Carbohydrates
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="bread" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Bread
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="oats" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Oats
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="rice" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Rice
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="cereal" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Cereal
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="pasta" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Pasta
-              </label>
-            </div>
-          </ul>
-        </div>
-        <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Dairy
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="milk" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Milk
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="egg" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Eggs
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="cheese" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Cheese
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="butter" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Butter
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="yoghurt" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Yoghurt
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="cream" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Cream
-              </label>
-            </div>
-          </ul>
-        </div>
-        <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Meat
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="chicken" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Chicken
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="beef" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Beef
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="lamb" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Lamb
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="pork" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Pork
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="salmon" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Salmon
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="cod" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Cod
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="turkey" id="flexCheckDefault" name="check">
-              <label class="form-check-label" for="flexCheckDefault">
-                Turkey
-              </label>
-            </div>
-          </ul>
-        </div>
-        
+      <label>Common Ingredients</label><br />
+      <div class="btn-group" role="group">
+        <button
+          id="btnGroupDrop1"
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Vegetables
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="potato"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Potatoes
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="onion"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Onions
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="carrot"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Carrots
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="mushroom"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Mushrooms
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="broccoli"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Broccoli
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="peas"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Peas
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="cabbage"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Cabbage
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="lettuce"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Lettuce
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="peppers"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Peppers
+            </label>
+          </div>
+        </ul>
+      </div>
+      <div class="btn-group" role="group">
+        <button
+          id="btnGroupDrop1"
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Fruits
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="tomato"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Tomato
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="apple"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Apple
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="banana"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Banana
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="orange"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Orange
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="pear"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Pear
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="avocado"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Avocado
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="grape"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Grapes
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="strawberry"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Strawberry
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="raspberry"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Raspberry
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="cherry"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Cherry
+            </label>
+          </div>
+        </ul>
+      </div>
+      <div class="btn-group" role="group">
+        <button
+          id="btnGroupDrop1"
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Carbohydrates
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="bread"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Bread
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="oats"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Oats
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="rice"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Rice
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="cereal"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Cereal
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="pasta"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Pasta
+            </label>
+          </div>
+        </ul>
+      </div>
+      <div class="btn-group" role="group">
+        <button
+          id="btnGroupDrop1"
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Dairy
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="milk"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Milk
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="egg"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Eggs
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="cheese"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Cheese
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="butter"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Butter
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="yoghurt"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Yoghurt
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="cream"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Cream
+            </label>
+          </div>
+        </ul>
+      </div>
+      <div class="btn-group" role="group">
+        <button
+          id="btnGroupDrop1"
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Meat
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="chicken"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Chicken
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="beef"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Beef
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="lamb"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Lamb
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="pork"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Pork
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="salmon"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Salmon
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="cod"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault"> Cod </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value="turkey"
+              id="flexCheckDefault"
+              name="check"
+            />
+            <label class="form-check-label" for="flexCheckDefault">
+              Turkey
+            </label>
+          </div>
+        </ul>
+      </div>
+
       <div class="form-group w-35">
-        <br>
+        <br />
         <div class="mb-3">
-          <label for="ingredientsinput" class="form-label">Additional Ingredients</label>
-          <input type="text" class="form-control" id="ingredientsinput" placeholder="Enter ingredients" name="ingredients" data-bs-toggle="tooltip" title="Enter any additional ingredients, separated by commas">
-        </div>        
+          <label for="ingredientsinput" class="form-label"
+            >Additional Ingredients</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="ingredientsinput"
+            placeholder="Enter ingredients"
+            name="ingredients"
+            data-bs-toggle="tooltip"
+            title="Enter any additional ingredients, separated by commas"
+          />
+        </div>
         <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <button
+            id="btnGroupDrop1"
+            type="button"
+            class="btn btn-primary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
             Meal Type
           </button>
           <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" required>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Breakfast" id="flexCheckDefault" name="mealcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="Breakfast"
+                id="flexCheckDefault"
+                name="mealcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Breakfast
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Lunch" id="flexCheckDefault" name="mealcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="Lunch"
+                id="flexCheckDefault"
+                name="mealcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Lunch
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Dinner" id="flexCheckDefault" name="mealcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="Dinner"
+                id="flexCheckDefault"
+                name="mealcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Dinner
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Snack" id="flexCheckDefault" name="mealcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="Snack"
+                id="flexCheckDefault"
+                name="mealcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Snack
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Teatime" id="flexCheckDefault" name="mealcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="Teatime"
+                id="flexCheckDefault"
+                name="mealcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
-                Teatime 
+                Teatime
               </label>
             </div>
           </ul>
-        </div> 
+        </div>
         <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <button
+            id="btnGroupDrop1"
+            type="button"
+            class="btn btn-primary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
             Dietary Requirements
           </button>
           <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="alcohol-free" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="alcohol-free"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Alcohol-Free
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="celery-free" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="celery-free"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Celery-Free
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="dairy-free" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="dairy-free"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Dairy-Free
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="egg-free" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="egg-free"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Egg-Free
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="gluten-free" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="gluten-free"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Gluten-Free
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="kosher" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="kosher"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
-                Kosher 
+                Kosher
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="peanut-free" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="peanut-free"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
                 Peanut-Free
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="pescatarian" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="pescatarian"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
-                Pescatarian 
+                Pescatarian
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="vegan" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="vegan"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
-                Vegan 
+                Vegan
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="vegetarian" id="flexCheckDefault" name="dietcheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="vegetarian"
+                id="flexCheckDefault"
+                name="dietcheck"
+              />
               <label class="form-check-label" for="flexCheckDefault">
-                Vegetarian 
+                Vegetarian
               </label>
             </div>
           </ul>
         </div>
-        <br>
-        <br>
+        <br />
+        <br />
         <div class="col-md-12 text-center">
-          <button type="submit" class="btn btn-primary">Search Recipes</button> 
+          <button type="submit" class="btn btn-primary">Search Recipes</button>
         </div>
       </div>
     </form>
