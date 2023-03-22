@@ -37,7 +37,7 @@
   }
 
   .green {
-    background-color: #00ff00;
+    background-color: green;
   }
 
   .activelightred {
@@ -107,7 +107,8 @@
 {% if not data%}
 <p class="text-center">Sorry no recipes found with your inputted ingredients</p>
 {% else %}
-<h1>Your Recipes</h1>
+<div class="text-center"><h1>Your Personalised Recipes</h1></div>
+<br>
 <div class="d-flex flex-wrap justify-content-evenly">
   {% for row in data %} {% set val = cfv[loop.index0] if cfv else None %}
   <div class="position-relative border-0 card mb-5" style="width: 17rem">

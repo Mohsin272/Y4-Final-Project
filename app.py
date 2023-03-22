@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, flash
 import requests
 import secrets
 import DBcm
@@ -177,7 +177,8 @@ def addrecipe():
                     Carbon,
                 ),
             )
-        return redirect("/recipe")
+        #flash(f'{Label} has been saved! ', 'success')
+        return redirect("/savedRecipes")
     else:
         return redirect("/login")
 
