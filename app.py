@@ -238,26 +238,55 @@ def sort_by_criteria(res, criteria):
     elif criteria == "servingHL":
         return sorted(res, key=lambda r: r["recipe"]["yield"], reverse=True)
     elif criteria == "carbsLH":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"])
+        return sorted(
+            res, key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"]
+        )
     elif criteria == "carbsHL":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"], reverse=True)
+        return sorted(
+            res,
+            key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"],
+            reverse=True,
+        )
     elif criteria == "fatLH":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"])
+        return sorted(
+            res, key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"]
+        )
     elif criteria == "fatHL":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"], reverse=True)
+        return sorted(
+            res,
+            key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"],
+            reverse=True,
+        )
     elif criteria == "proteinLH":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"])
+        return sorted(
+            res, key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"]
+        )
     elif criteria == "proteinHL":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"], reverse=True)
+        return sorted(
+            res,
+            key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"],
+            reverse=True,
+        )
     elif criteria == "sugarLH":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"])
+        return sorted(
+            res, key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"]
+        )
     elif criteria == "sugarHL":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"], reverse=True)
+        return sorted(
+            res,
+            key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"],
+            reverse=True,
+        )
     elif criteria == "fiberLH":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"])
+        return sorted(
+            res, key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"]
+        )
     elif criteria == "fiberHL":
-        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"], reverse=True)
-
+        return sorted(
+            res,
+            key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"],
+            reverse=True,
+        )
 
 
 def process_ingredients(res, items):
