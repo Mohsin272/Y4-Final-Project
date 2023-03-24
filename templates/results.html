@@ -103,12 +103,70 @@
     </ul>
   </div>
 </nav>
-<br /><br /><br />
+<br />
 {% if not data%}
 <p class="text-center">Sorry no recipes found with your inputted ingredients</p>
 {% else %}
-<div class="text-center"><h1>Your Personalised Recipes</h1></div>
-<br>
+<div class="text-center"><h1>Your Personalised Recipes</h1>
+  <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Sort Recipes
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <div class="text-left">
+      <form method="post" action="{{ url_for('sort_results') }}">
+        <input type="hidden" name="meal" value="{{meal}}">
+        <input type="hidden" name="ing" value="{{ing}}">
+        <input type="hidden" name="health" value="{{health}}">
+        <button class="dropdown-item" type="submit" name="criteria" value="caloriesLH">
+          Calories (Low-High)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="caloriesHL">
+          Calories (High-Low)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="servingLH">
+          Serving Size (Low-High)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="servingHL">
+          Serving Size (High-Low)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="carbsLH">
+         Carbohydrates (Low-High)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="carbsHL">
+         Carbohydrates (High-Low)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="fatLH">
+          Fat (Low-High)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="fatHL">
+          Fat (High-Low)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="proteinLH">
+          Protein (Low-High)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="proteinHL">
+          Protein (High-Low)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="sugarLH">
+          Sugar (Low-High)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="sugarHL">
+          Sugar (High-Low)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="fiberLH">
+          Fiber (Low-High)
+        </button>
+        <button class="dropdown-item" type="submit" name="criteria" value="fiberHL">
+          Fiber (High-Low)
+        </button>
+      </form>
+    </div>
+</div>
+
+</div>
+</div>
+<br />
 <div class="d-flex flex-wrap justify-content-evenly">
   {% for row in data %} {% set val = cfv[loop.index0] if cfv else None %}
   <div class="position-relative border-0 card mb-5" style="width: 17rem">
@@ -132,20 +190,6 @@
           {% endif %}
         </div>
         {% endif %}
-        <!-- {% if cfv %}
-          {% set val = cfv[0] %}
-          <h6>Carbon Footprint Indicator</h6>
-          <div class="traffic-light">
-            {% if val == 'GREEN' %}
-              <div class="light red"></div>
-              <div class="light green activelightgreen"></div>
-            {% endif %}             
-            {% if val == 'RED' %}
-              <div class="light red activelightred"></div>
-              <div class="light green"></div>
-            {% endif %} 
-          </div>
-        {% endif %} -->
       </div>
     </div>
 
@@ -339,7 +383,7 @@
                 value="{{ row['recipe']['image'] }}"
               />
               {% if "username" not in session %}
-              <button disabled type="submit" class="btn btn-outline ">
+              <button disabled type="submit" class="btn btn-outline">
                 Save Recipe
               </button>
               {% else %}
@@ -347,10 +391,6 @@
                 Save Recipe
               </button>
               {% endif %}
-
-              <!-- <button type="submit" class="btn btn-outline-info">
-                Save Recipe
-              </button> -->
             </form>
           </div>
           <div class="modal-footer">

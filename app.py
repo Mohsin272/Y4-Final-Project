@@ -6,6 +6,7 @@ import bcrypt
 from concurrent.futures import ThreadPoolExecutor
 from appconfig import config
 import re
+import json
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
@@ -48,7 +49,7 @@ def savedRecipes():
             "savedRecipes.html",
             title="Saved Recipe",
             res=res,
-            heading="Your Saved Recipes",
+            # heading="Your Saved Recipes",
         )
     else:
         return redirect("/login")
@@ -62,7 +63,7 @@ def dashboard():
         "edamam.html",
         title=session["username"] + "'s Dashboard",
         name=session["username"],
-        #heading="Welcome, " + session["username"],
+        # heading="Welcome, " + session["username"],
     )
 
 
@@ -177,7 +178,6 @@ def addrecipe():
                     Carbon,
                 ),
             )
-        #flash(f'{Label} has been saved! ', 'success')
         return redirect("/savedRecipes")
     else:
         return redirect("/login")
@@ -225,10 +225,94 @@ def processform():
 
 @app.route("/recipe")
 def edamam():
+    return render_template("edamam.html", title="Macro Meals",)
+
+
+def sort_by_criteria(res, criteria):
+    if criteria == "caloriesLH":
+        return sorted(res, key=lambda r: r["recipe"]["calories"])
+    elif criteria == "caloriesHL":
+        return sorted(res, key=lambda r: r["recipe"]["calories"], reverse=True)
+    elif criteria == "servingLH":
+        return sorted(res, key=lambda r: r["recipe"]["yield"])
+    elif criteria == "servingHL":
+        return sorted(res, key=lambda r: r["recipe"]["yield"], reverse=True)
+    elif criteria == "carbsLH":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"])
+    elif criteria == "carbsHL":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"], reverse=True)
+    elif criteria == "fatLH":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"])
+    elif criteria == "fatHL":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"], reverse=True)
+    elif criteria == "proteinLH":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"])
+    elif criteria == "proteinHL":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"], reverse=True)
+    elif criteria == "sugarLH":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"])
+    elif criteria == "sugarHL":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"], reverse=True)
+    elif criteria == "fiberLH":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"])
+    elif criteria == "fiberHL":
+        return sorted(res, key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"], reverse=True)
+
+
+
+def process_ingredients(res, items):
+    ingredients_list = []
+    res_list = []
+    for row in res:
+        for ing in row["recipe"]["ingredientLines"]:
+            ingredients_list.append(ing)
+        value = get_carbon_value(ingredients_list, items)
+        res_list.append(value)
+    return res_list
+
+
+@app.route("/sort_results", methods=["POST", "GET"])
+def sort_results():
+    app_id = "9e0266d1"
+    app_key = "573469b41542adce2933662450986489"
+    meal_type = request.form.get("meal")
+    ingredients = request.form.get("ing")
+    health = request.form.get("health")
+    if health == "" and meal_type == "":
+        result = requests.get(
+            f"https://api.edamam.com/search?q={ingredients}&app_id={app_id}&app_key={app_key}"
+        )
+    elif not meal_type:
+        result = requests.get(
+            f"https://api.edamam.com/search?q={ingredients}&health={health}&app_id={app_id}&app_key={app_key}"
+        )
+    elif health == "" or " ":
+        result = requests.get(
+            f"https://api.edamam.com/search?q={ingredients}&mealType={meal_type}&app_id={app_id}&app_key={app_key}"
+        )
+    else:
+        result = requests.get(
+            f"https://api.edamam.com/search?q={ingredients}&health={health}&mealType={meal_type}&app_id={app_id}&app_key={app_key}"
+        )
+    data = result.json()
+    res = data["hits"]
+    criteria = request.form["criteria"]
+
+    # Sort the results based on the given criteria
+    res = sort_by_criteria(res, criteria)
+
+    # Process the ingredients and get the carbon values
+    res_list = process_ingredients(res, items)
+
+    # Return the sorted results in the same template as before
     return render_template(
-        "edamam.html",
-        title="Macro Meals",
-        #heading="Enter the following for a Personalised Recipe",
+        "results.html",
+        title="Suggested Recipes ",
+        data=res,
+        cfv=res_list,
+        meal=meal_type,
+        ing=ingredients,
+        health=health,
     )
 
 
@@ -265,6 +349,7 @@ def process():
         )
     data = result.json()
     res = data["hits"]
+    # res = sorted(res, key=lambda r: r['recipe']['calories'])
 
     ingredients_list = []
     res_list = []
@@ -283,9 +368,12 @@ def process():
     return render_template(
         "results.html",
         title="Suggested Recipes ",
-        #heading="Your Recipes",
+        # heading="Your Recipes",
         data=res,
         cfv=res_list,
+        meal=meal_type,
+        ing=ingredients,
+        health=health,
     )
 
 
@@ -331,14 +419,10 @@ items = [
     "Chocolate",
     "Coffee",
     "Corn",
-    "Dark Chocolate",
     "Lamb",
-    "Leeks",
-    "Maize",
     "Mutton",
     "Palm Oil",
     "Pork",
-    "Potatoes",
     "Poultry Meat",
     "Rapeseed Oil",
     "Salmon",

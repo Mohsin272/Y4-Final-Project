@@ -106,6 +106,8 @@
 {% if not res%}
 <p class="text-center">Sorry you have no Recipes Saved</p>
 {% else %}
+<div class="text-center"><h1>Your Saved Recipes</h1></div>
+<br>
 <div class="d-flex flex-wrap justify-content-evenly">
   {% for row in res %}
   <div class="position-relative border-0 card mb-5" style="width: 15rem">
