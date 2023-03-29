@@ -76,19 +76,25 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/recipe">Receive a Personalised Recipe</a>
+        <a class="nav-link" href="/recipe">Search Recipes</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/savedRecipes">Saved Recipes</a>
       </li>
+      {% if "username" not in session %}
+      <li class="nav-item">
+        <a class="nav-link text-success" href="/logout">Login</a>
+      </li>
+      {% else %}
       <li class="nav-item">
         <a class="nav-link text-danger" href="/logout">Logout</a>
       </li>
+      {% endif %}
     </ul>
   </div>
 </nav>
 <br /><br /><br />
-<div class="text-center"><h1>Enter the following for a Personalised Recipe</h1></div>
+<div class="text-center"><h1>Search Recipes</h1></div>
 <div class="d-flex justify-content-center">
   <div class="text-left">
     <br />
@@ -604,14 +610,11 @@
       <div class="form-group w-35">
         <br />
         <div class="mb-3">
-          <label for="ingredientsinput" class="form-label"
-            >Additional Ingredients</label
-          >
           <input
             type="text"
             class="form-control"
             id="ingredientsinput"
-            placeholder="Enter ingredients"
+            placeholder="Enter any additional ingredients, separated by commas"
             name="ingredients"
             data-bs-toggle="tooltip"
             title="Enter any additional ingredients, separated by commas"
@@ -621,7 +624,7 @@
           <button
             id="btnGroupDrop1"
             type="button"
-            class="btn btn-primary dropdown-toggle"
+            class="btn btn-info dropdown-toggle"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
@@ -694,7 +697,7 @@
           <button
             id="btnGroupDrop1"
             type="button"
-            class="btn btn-primary dropdown-toggle"
+            class="btn btn-info dropdown-toggle"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
@@ -826,12 +829,12 @@
         <br />
         <br />
         <div class="col-md-12 text-center">
-          <button type="submit" class="btn btn-primary">Search Recipes</button>
+          <button type="submit" class="btn btn-dark">Search</button>
         </div>
       </div>
     </form>
     <div id="selected-items"></div>
-    <button id="clear-selections" class="btn btn-danger mt-3">Clear Selections</button>
+    <button id="clear-selections" class="btn btn-danger btn-sm mt-3">X</button>
   </div>
 </div>
 {% endblock %}

@@ -92,14 +92,20 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/recipe">Receive a Personalised Recipe</a>
+        <a class="nav-link" href="/recipe">Search Recipes</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/savedRecipes">Saved Recipes</a>
       </li>
+      {% if "username" not in session %}
+      <li class="nav-item">
+        <a class="nav-link text-success" href="/logout">Login</a>
+      </li>
+      {% else %}
       <li class="nav-item">
         <a class="nav-link text-danger" href="/logout">Logout</a>
       </li>
+      {% endif %}
     </ul>
   </div>
 </nav>
@@ -179,6 +185,7 @@
       <div class="card-body">
         <h5 class="card-title">{{row['recipe']['label']}}</h5>
         {% if val %}
+        <br>
         <h6>Carbon Footprint Indicator</h6>
         <div class="traffic-light">
           {% if val == 'GREEN' %}
@@ -235,7 +242,7 @@
             <hr />
             <b>Serving Size:</b> {{(row['recipe']['yield'])|int }}
             <br />
-            <b>Calories per person:</b> {{((row['recipe']['calories'])|int /
+            <b>Calories per serving:</b> {{((row['recipe']['calories'])|int /
             (row['recipe']['yield'])|int) |int }}
             <br />
             <hr />
@@ -376,11 +383,6 @@
                 type="hidden"
                 name="Label"
                 value="{{ row['recipe']['label'] }}"
-              />
-              <input
-                type="hidden"
-                name="Image"
-                value="{{ row['recipe']['image'] }}"
               />
               {% if "username" not in session %}
               <button disabled type="submit" class="btn btn-outline">

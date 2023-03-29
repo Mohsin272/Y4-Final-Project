@@ -80,11 +80,11 @@ def login():
     errors = ""
     if request.method == "POST":
         username = request.form.get("username")
-        email = request.form.get("email")
+        # email = request.form.get("email")
         Userpassword = request.form.get("password")
         with DBcm.UseDatabase(config) as db:
-            SQL = """select * from users where Email = %s"""
-            db.execute(SQL, (email,))
+            SQL = """select * from users where Username = %s"""
+            db.execute(SQL, (username,))
             res = db.fetchall()
             if res:
                 Userpassword = Userpassword.encode("utf-8")
@@ -92,7 +92,7 @@ def login():
                 passres = bcrypt.checkpw(Userpassword, hashedDB)
                 if res and passres:
                     session["username"] = username
-                    session["email"] = email
+                    # session["email"] = email
                     return redirect("/recipe")
                 else:
                     errors = "Username/Password are incorrect"
@@ -139,14 +139,14 @@ def addrecipe():
                     Protein_name, Protein_value, Protein_unit,
                     Sugars_name, Sugars_value, Sugars_unit,
                     Fiber_name, Fiber_value, Fiber_unit,
-                    Link, Label, Image, Carbon
+                    Link, Label, Carbon
                     )
                     values
                     (%s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s
+                    %s, %s, %s
                     )
                 """
             db.execute(
@@ -174,7 +174,6 @@ def addrecipe():
                     Fiber_unit,
                     Link,
                     Label,
-                    Image,
                     Carbon,
                 ),
             )
@@ -441,7 +440,6 @@ def check_status(url):
 
 items = [
     "Avocado",
-    "Barley",
     "Beef",
     "Cheese",
     "Chicken",
@@ -452,17 +450,13 @@ items = [
     "Mutton",
     "Palm Oil",
     "Pork",
-    "Poultry Meat",
     "Rapeseed Oil",
-    "Salmon",
     "Shrimp",
     "Soy milk",
     "Soybean Oil",
     "Soybeans",
     "Sunflower Oil",
-    "Tofu",
-    "Tuna",
-    "Wine",
+    "Tofu"
 ]
 
 if __name__ == "__main__":  # pragma no cover

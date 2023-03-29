@@ -111,15 +111,16 @@
 <div class="d-flex flex-wrap justify-content-evenly">
   {% for row in res %}
   <div class="position-relative border-0 card mb-5" style="width: 15rem">
-    <img class="img-thumbnail" src="{{row[22]}}" alt="Card image cap" />
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title">{{row[21]}}</h5>
+        <br>
+        <h6>Carbon Footprint Indicator</h6>
         <div class="traffic-light">
-          {% if row[23] == 'GREEN' %}
+          {% if row[22] == 'GREEN' %}
           <div class="light red"></div>
           <div class="light green activelightgreen"></div>
-          {% endif %} {% if row[23] == 'RED' %}
+          {% endif %} {% if row[22] == 'RED' %}
           <div class="light red activelightred"></div>
           <div class="light green"></div>
           {% endif %}
@@ -167,7 +168,7 @@
             {{ing.strip("'")}} {% endfor %}
             <br />
             <hr />
-            <b>Calories per person:</b> {{ (row[3]) }}
+            <b>Calories per serving:</b> {{ (row[3]) }}
             <br />
             <b>Serving Size:</b> {{(row[4]) }}
             <br />
