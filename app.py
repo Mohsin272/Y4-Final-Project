@@ -388,11 +388,19 @@ def process():
         value = get_carbon_value(ingredients_list, items)
         res_list.append(value)
 
-    with ThreadPoolExecutor() as executor:
-        status_codes = list(
-            executor.map(check_status, [row["recipe"]["url"] for row in res])
-        )
-        res = [row for i, row in enumerate(res) if status_codes[i] == 200]
+    accessible_recipes = []
+    for row in res:
+        url = row["recipe"]["url"]
+        status_code = check_status(url)
+        if status_code == 200:
+            accessible_recipes.append(row)
+
+    res = accessible_recipes
+    # with ThreadPoolExecutor() as executor:
+    #     status_codes = list(
+    #         executor.map(check_status, [row["recipe"]["url"] for row in res])
+    #     )
+    #     res = [row for i, row in enumerate(res) if status_codes[i] == 200]
     return render_template(
         "results.html",
         title="Suggested Recipes ",
@@ -430,14 +438,19 @@ def get_carbon_value(ingredients_list, high_carbon_ingredients):
         return "GREEN"
 
 
+# def check_status(url):
+#     try:
+#         response = requests.get(url).status_code
+#         return response
+#     except:
+#         return 0
+
 def check_status(url):
     try:
-        response = requests.get(url).status_code
-        return response
-    except:
-        return 0
-
-
+        response = requests.head(url)
+        return response.status_code
+    except requests.RequestException:
+        return None
 items = [
     "Avocado",
     "Beef",
