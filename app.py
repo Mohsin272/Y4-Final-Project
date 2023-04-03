@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, session, flash
+from flask import Flask, request, render_template, redirect, session
 import requests
 import secrets
 import DBcm
@@ -6,7 +6,6 @@ import bcrypt
 from concurrent.futures import ThreadPoolExecutor
 from appconfig import config
 import re
-import json
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
@@ -71,6 +70,35 @@ def dashboard():
 def logout():
     session.pop("username", None)
     return redirect("/login")
+
+
+@app.route("/passreset", methods=["GET", "POST"])
+def changepw():
+    return render_template("changepw.html", title="Change Password")
+
+
+@app.route("/processreset", methods=["GET", "POST"])
+def processreset():
+    errors = []
+    email = request.form.get("email")
+    password = request.form.get("password")
+    repeatpassword = request.form.get("repeatpassword")
+    password = password.encode("utf-8")
+    repeatpassword = repeatpassword.encode("utf-8")
+    hashed_password = bcrypt.hashpw(password, salt)
+    hashed_password_r = bcrypt.hashpw(repeatpassword, salt)
+    if hashed_password != hashed_password_r:
+        errors.append("Passwords do not match")
+    else:
+        with DBcm.UseDatabase(config) as db:
+            SQL = """
+                UPDATE users
+                SET Password = %s
+                WHERE Email = %s
+            """
+            db.execute(SQL, (hashed_password, email))
+        return redirect("/login")
+    return render_template("changepw.html", title="Change Password", errors=errors)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -445,12 +473,15 @@ def get_carbon_value(ingredients_list, high_carbon_ingredients):
 #     except:
 #         return 0
 
+
 def check_status(url):
     try:
         response = requests.head(url)
         return response.status_code
     except requests.RequestException:
         return None
+
+
 items = [
     "Avocado",
     "Beef",
@@ -469,7 +500,7 @@ items = [
     "Soybean Oil",
     "Soybeans",
     "Sunflower Oil",
-    "Tofu"
+    "Tofu",
 ]
 
 if __name__ == "__main__":  # pragma no cover

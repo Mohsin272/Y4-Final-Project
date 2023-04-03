@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block body %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" >Macro Meals</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+<br><br><br>
+<div class="d-flex justify-content-center">
+ 
+  <div class="card" style="width: 30rem;">
+    <div class="card-body">
+      <form action="/processreset" method="post" class ="needs-validation" novalidate>
+        <p class="h4 text-center">
+          Reset Password
+        </p>
+    <div class="mb-3">
+      <label for="emailID" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="emailID" aria-describedby="emailHelp" name="email" required>
+      <div class="invalid-feedback">
+        Please enter a valid email address.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="passwordID" class="form-label">New Password</label>
+      <input type="password" class="form-control" id="passwordID" name="password" required minlength="8">
+      <div class="invalid-feedback">
+        Please enter a password.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="passwordrepeatID" class="form-label">Repeat Password</label>
+      <input type="password" class="form-control" id="passwordrepeatID" name="repeatpassword" required minlength="8">
+      <div class="invalid-feedback">
+        Please re-enter your password.
+      </div>
+    </div>
+    <div class="text-center">
+      {% for e in errors %}
+      <p class="text-danger"> {{e}}</p>
+      {% endfor %}
+    <button type="submit" class="btn btn-primary">Change</button>
+    <br>
+    <p>Back to login <a href="/login">Login</a></p>
+  </div>
+  </form>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict'
+
+  var forms = document.querySelectorAll('.needs-validation')
+
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+</script>
+{% endblock %}
+    
