@@ -279,6 +279,11 @@
               class="btn btn-outline-success"
               >Get Instructions</a
             >
+            <a
+            href=""
+            class="btn btn-outline-warning"
+            >Ask AI for low carbon alternatives</a
+          >
             <form action="/addrecipe" method="post">
               <!--
               Hidden fields to hold all recipe information so it can be called by the save recipe function
@@ -386,7 +391,7 @@
               />
               {% if "username" not in session %}
               <button disabled type="submit" class="btn btn-outline">
-                Save Recipe
+                Login to Save Recipes
               </button>
               {% else %}
               <button type="submit" class="btn btn-outline-info">
