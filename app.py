@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, jsonify
 import requests
 import secrets
 import DBcm
@@ -6,6 +6,7 @@ import bcrypt
 from concurrent.futures import ThreadPoolExecutor
 from appconfig import config
 import re
+import openai
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
@@ -128,10 +129,37 @@ def login():
                 errors = "User does not exist"
     return render_template("login.html", title="Welcome", errors=errors)
 
+@app.route("/gpt", methods=["POST", "GET"])
+def gpt():
+    openai.api_key = "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"
+    ing = request.form.get("Ingredients").strip("[]")
+    message = "print this list of ingredients with carbon footprint friendly alternatives. Only print a list no explanation please."
+
+    separator = "\n"
+
+    ingredient_list = ing.split(", ")
+
+    # Join the ingredients list using the separator
+    joined_ingredients = separator.join(ingredient_list)
+
+    # Concatenate the message string and the joined ingredients list
+    message_with_ingredients = message + "\n\n" + joined_ingredients
+
+    # Print the result
+    #print(message_with_ingredients)
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+                {"role": "user", "content": message_with_ingredients},
+            ]
+    )
+    result = ''
+    for choice in response.choices:
+        result += choice.message.content
+    return render_template("gpt.html", title="GPT Results",result=result)
 
 @app.route("/addrecipe", methods=["GET", "POST"])
 def addrecipe():
-    errors = []
     Ingredients = request.form.get("Ingredients").strip("[]")
     Calories = request.form.get("Calories")
     Servings = request.form.get("Servings")
@@ -372,6 +400,7 @@ def sort_results():
     )
 
 
+
 @app.route("/recipe", methods=["GET", "POST"])
 def process():
     app_id = "9e0266d1"
@@ -420,15 +449,10 @@ def process():
     for row in res:
         url = row["recipe"]["url"]
         status_code = check_status(url)
-        if status_code == 200:
+        if status_code != 404:
             accessible_recipes.append(row)
 
     res = accessible_recipes
-    # with ThreadPoolExecutor() as executor:
-    #     status_codes = list(
-    #         executor.map(check_status, [row["recipe"]["url"] for row in res])
-    #     )
-    #     res = [row for i, row in enumerate(res) if status_codes[i] == 200]
     return render_template(
         "results.html",
         title="Suggested Recipes ",
