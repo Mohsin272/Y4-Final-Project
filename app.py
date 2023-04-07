@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from appconfig import config
 import re
 import openai
+import secret
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
@@ -131,7 +132,7 @@ def login():
 
 @app.route("/gpt", methods=["POST", "GET"])
 def gpt():
-    openai.api_key = "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"
+    openai.api_key = secret.open_ai_api_key
     ing = request.form.get("Ingredients").strip("[]")
     message = "print this list of ingredients with carbon footprint friendly alternatives. Only print a list no explanation please."
 
@@ -155,7 +156,7 @@ def gpt():
     )
     result = ''
     for choice in response.choices:
-        result += choice.message.content
+        result+=choice.message.content
     return render_template("gpt.html", title="GPT Results",result=result)
 
 @app.route("/addrecipe", methods=["GET", "POST"])
