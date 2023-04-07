@@ -135,19 +135,10 @@ def gpt():
     openai.api_key = secret.open_ai_api_key
     ing = request.form.get("Ingredients").strip("[]")
     message = "print this list of ingredients with carbon footprint friendly alternatives. Only print a list no explanation please."
-
     separator = "\n"
-
     ingredient_list = ing.split(", ")
-
-    # Join the ingredients list using the separator
     joined_ingredients = separator.join(ingredient_list)
-
-    # Concatenate the message string and the joined ingredients list
     message_with_ingredients = message + "\n\n" + joined_ingredients
-
-    # Print the result
-    #print(message_with_ingredients)
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -358,8 +349,8 @@ def process_ingredients(res, items):
 
 @app.route("/sort_results", methods=["POST", "GET"])
 def sort_results():
-    app_id = "9e0266d1"
-    app_key = "573469b41542adce2933662450986489"
+    app_id = secret.edamam_app_id
+    app_key = secret.edamam_api_key
     meal_type = request.form.get("meal")
     ingredients = request.form.get("ing")
     health = request.form.get("health")
@@ -404,8 +395,8 @@ def sort_results():
 
 @app.route("/recipe", methods=["GET", "POST"])
 def process():
-    app_id = "9e0266d1"
-    app_key = "573469b41542adce2933662450986489"
+    app_id = secret.edamam_app_id
+    app_key = secret.edamam_api_key
     meal_type = request.form.getlist("mealcheck")
     meal_type = ",".join(meal_type)
     ingredients = request.form["ingredients"]
@@ -435,16 +426,16 @@ def process():
         )
     data = result.json()
     res = data["hits"]
-    # res = sorted(res, key=lambda r: r['recipe']['calories'])
 
-    ingredients_list = []
+    # ingredients_list = []
     res_list = []
-    # Sample list of ingredients
-    for row in res:
-        for ing in row["recipe"]["ingredientLines"]:
-            ingredients_list.append(ing)
-        value = get_carbon_value(ingredients_list, items)
-        res_list.append(value)
+    # # Sample list of ingredients
+    # for row in res:
+    #     for ing in row["recipe"]["ingredientLines"]:
+    #         ingredients_list.append(ing)
+    #     value = get_carbon_value(ingredients_list, items)
+    #     res_list.append(value)
+    res_list = process_ingredients(res, items, items_carbon_values)
 
     accessible_recipes = []
     for row in res:
@@ -457,7 +448,6 @@ def process():
     return render_template(
         "results.html",
         title="Suggested Recipes ",
-        # heading="Your Recipes",
         data=res,
         cfv=res_list,
         meal=meal_type,
@@ -465,39 +455,62 @@ def process():
         health=health,
     )
 
+def extract_quantity(ingredient):
+    quantity_match = re.search(r'(\d+([.,]\d+)?)', ingredient)
+    if quantity_match:
+        return float(quantity_match.group(1))
+    else:
+        return 1
 
-def get_carbon_value(ingredients_list, high_carbon_ingredients):
-    # Define a regular expression pattern to extract ingredient names
-    ingredient_pattern = re.compile(r"^\d*\s*(?:\d+\/\d+\s*)?(?:cup|tsp|tbsp)?\s*(.*)")
-
-    # Extract ingredient names from the list
-    ingredient_names = []
-    for ingredient in ingredients_list:
-        match = ingredient_pattern.match(ingredient)
-        if match:
-            ingredient_names.append(match.group(1).lower())  # Convert to lowercase
-
-    # Count the number of matching ingredients
-    matches = sum(
-        1
-        for ingredient in ingredient_names
-        if any(match.lower() in ingredient for match in high_carbon_ingredients)
-    )
-
-    # Return a color code based on the total number of matching ingredients
-    if matches >= 2:
+def get_carbon_value(ingredients_list, items, items_carbon_values, serving_size):
+    total_carbon_value = 0
+    for ing in ingredients_list:
+        for item, carbon_value in zip(items, items_carbon_values):
+            if item.lower() in ing.lower():
+                quantity = extract_quantity(ing)
+                total_carbon_value += carbon_value * quantity
+                break
+    if serving_size >=4:
+        total_carbon_value /= serving_size
+    if total_carbon_value >= 30:
         return "RED"
     else:
         return "GREEN"
 
+def process_ingredients(res, items, items_carbon_values):
+    res_list = []
+    for row in res:
+        ingredients_list = []
+        for ing in row["recipe"]["ingredientLines"]:
+            ingredients_list.append(ing)
+        serving_size = row['recipe']['yield']
+        value = get_carbon_value(ingredients_list, items, items_carbon_values, serving_size)
+        res_list.append(value)
+    return res_list
 
-# def check_status(url):
-#     try:
-#         response = requests.get(url).status_code
-#         return response
-#     except:
-#         return 0
+# def get_carbon_value(ingredients_list, high_carbon_ingredients):
+#     # Define a regular expression pattern to extract ingredient names
+#     ingredient_pattern = re.compile(r"^\d*\s*(?:\d+\/\d+\s*)?(?:cup|tsp|tbsp)?\s*(.*)")
 
+#     # Extract ingredient names from the list
+#     ingredient_names = []
+#     for ingredient in ingredients_list:
+#         match = ingredient_pattern.match(ingredient)
+#         if match:
+#             ingredient_names.append(match.group(1).lower())  # Convert to lowercase
+
+#     # Count the number of matching ingredients
+#     matches = sum(
+#         1
+#         for ingredient in ingredient_names
+#         if any(match.lower() in ingredient for match in high_carbon_ingredients)
+#     )
+
+#     # Return a color code based on the total number of matching ingredients
+#     if matches >= 2:
+#         return "RED"
+#     else:
+#         return "GREEN"
 
 def check_status(url):
     try:
@@ -526,6 +539,26 @@ items = [
     "Soybeans",
     "Sunflower Oil",
     "Tofu",
+]
+items_carbon_values = [
+    2,          # Avocado
+    27,         # Beef
+    13.5,       # Cheese
+    6.9,        # Chicken
+    19,         # Chocolate
+    16.5,       # Coffee
+    0.9,        # Corn
+    25.6,       # Lamb
+    25.6,       # Mutton
+    7.6,        # Palm Oil
+    12.1,       # Pork
+    3.9,        # Rapeseed Oil
+    11.8,       # Shrimp
+    1,          # Soy milk
+    6.2,        # Soybean Oil
+    2,          # Soybeans
+    3.5,        # Sunflower Oil
+    2,          # Tofu
 ]
 
 if __name__ == "__main__":  # pragma no cover
