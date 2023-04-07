@@ -377,8 +377,9 @@ def sort_results():
     # Sort the results based on the given criteria
     res = sort_by_criteria(res, criteria)
 
+    res_list=[]
     # Process the ingredients and get the carbon values
-    res_list = process_ingredients(res, items)
+    res_list = process_ingredients(res, items, items_carbon_values)
 
     # Return the sorted results in the same template as before
     return render_template(
