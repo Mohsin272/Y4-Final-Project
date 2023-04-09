@@ -8,6 +8,7 @@ from appconfig import config
 import re
 import openai
 import secret
+from flask_dance.contrib.google import make_google_blueprint, google
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
@@ -26,12 +27,12 @@ def register():
 
 @app.route("/deleteRecipe", methods=["GET", "POST"])
 def deleteRecipe():
-    email = session.get("email", None)
+    username = session.get("username", None)
     url = request.form.get("Link")
-    if email is not None:
+    if username is not None:
         with DBcm.UseDatabase(config) as db:
-            SQL = """delete from saved_recipes where Email = %s and Link = %s"""
-            data = (email, url)
+            SQL = """delete from saved_recipes where Username = %s and Link = %s"""
+            data = (username, url)
             db.execute(SQL, data)
         return redirect("/recipe")
     else:
@@ -40,11 +41,11 @@ def deleteRecipe():
 
 @app.route("/savedRecipes")
 def savedRecipes():
-    email = session.get("email", None)
-    if email is not None:
+    username = session.get("username", None)
+    if username is not None:
         with DBcm.UseDatabase(config) as db:
-            SQL = """select * from saved_recipes where Email = %s"""
-            db.execute(SQL, (email,))
+            SQL = """select * from saved_recipes where Username = %s"""
+            db.execute(SQL, (username,))
             res = db.fetchall()
         return render_template(
             "savedRecipes.html",
@@ -103,6 +104,54 @@ def processreset():
     return render_template("changepw.html", title="Change Password", errors=errors)
 
 
+import os
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
+# OAuth2 consumer configuration for Google
+app.config[
+    "GOOGLE_OAUTH_CLIENT_ID"
+] = "29958200831-566b4muon1sof27uma9e1mq287q0p80c.apps.googleusercontent.com"
+app.config["GOOGLE_OAUTH_CLIENT_SECRET"] = "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"
+
+# Create Google OAuth2 blueprint
+google_bp = make_google_blueprint(
+    client_id=app.config["GOOGLE_OAUTH_CLIENT_ID"],
+    client_secret=app.config["GOOGLE_OAUTH_CLIENT_SECRET"],
+    scope=[
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "openid",
+    ],
+    redirect_url="/login/google/authorized",  # Update this line
+)
+
+app.register_blueprint(google_bp, url_prefix="/login")
+
+
+@app.route("/login/google/authorized")
+def google_login():
+    if google.authorized:
+        resp = google.get("/oauth2/v2/userinfo")
+        if resp.ok:
+            user_data = resp.json()
+            username = user_data["name"]
+            email = user_data["email"]
+
+            with DBcm.UseDatabase(config) as db:
+                SQL = """INSERT IGNORE INTO users (Username, Email) VALUES (%s, %s)"""
+                db.execute(SQL, (username, email))
+
+            session["username"] = username
+            session["email"] = email
+
+            return redirect("/recipe")
+        else:
+            return "Google login failed", 400
+    else:
+        return redirect(url_for("google.login"))
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if "username" in session:
@@ -110,7 +159,6 @@ def login():
     errors = ""
     if request.method == "POST":
         username = request.form.get("username")
-        # email = request.form.get("email")
         Userpassword = request.form.get("password")
         with DBcm.UseDatabase(config) as db:
             SQL = """select * from users where Username = %s"""
@@ -122,13 +170,14 @@ def login():
                 passres = bcrypt.checkpw(Userpassword, hashedDB)
                 if res and passres:
                     session["username"] = username
-                    # session["email"] = email
+                    session["email"] = res[0][2]
                     return redirect("/recipe")
                 else:
                     errors = "Username/Password are incorrect"
             else:
                 errors = "User does not exist"
     return render_template("login.html", title="Welcome", errors=errors)
+
 
 @app.route("/gpt", methods=["POST", "GET"])
 def gpt():
@@ -141,14 +190,13 @@ def gpt():
     message_with_ingredients = message + "\n\n" + joined_ingredients
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[
-                {"role": "user", "content": message_with_ingredients},
-            ]
+        messages=[{"role": "user", "content": message_with_ingredients},],
     )
-    result = ''
+    result = ""
     for choice in response.choices:
-        result+=choice.message.content
-    return render_template("gpt.html", title="GPT Results",result=result)
+        result += choice.message.content
+    return render_template("gpt.html", title="GPT Results", result=result)
+
 
 @app.route("/addrecipe", methods=["GET", "POST"])
 def addrecipe():
@@ -172,12 +220,20 @@ def addrecipe():
     Fiber_unit = request.form.get("Fiber unit")
     Link = request.form.get("Link")
     Label = request.form.get("Label")
-    Image = request.form.get("Image")
     Username = session.get("username", None)
     Email = session.get("email", None)
     Carbon = request.form.get("carbon")
 
     if Username and Email is not None:
+        # Check if the recipe already exists
+        with DBcm.UseDatabase(config) as db:
+            SQL = """SELECT * FROM saved_recipes WHERE Email = %s AND Link = %s"""
+            db.execute(SQL, (Email, Link))
+            existing_recipe = db.fetchone()
+
+        if existing_recipe:
+            # If the recipe already exists, return a message
+            return redirect("/savedRecipes")
         with DBcm.UseDatabase(config) as db:
             SQL = """
                     insert into saved_recipes
@@ -377,7 +433,7 @@ def sort_results():
     # Sort the results based on the given criteria
     res = sort_by_criteria(res, criteria)
 
-    res_list=[]
+    res_list = []
     # Process the ingredients and get the carbon values
     res_list = process_ingredients(res, items, items_carbon_values)
 
@@ -391,7 +447,6 @@ def sort_results():
         ing=ingredients,
         health=health,
     )
-
 
 
 @app.route("/recipe", methods=["GET", "POST"])
@@ -456,12 +511,14 @@ def process():
         health=health,
     )
 
+
 def extract_quantity(ingredient):
-    quantity_match = re.search(r'(\d+([.,]\d+)?)', ingredient)
+    quantity_match = re.search(r"(\d+([.,]\d+)?)", ingredient)
     if quantity_match:
         return float(quantity_match.group(1))
     else:
         return 1
+
 
 def get_carbon_value(ingredients_list, items, items_carbon_values, serving_size):
     total_carbon_value = 0
@@ -471,12 +528,13 @@ def get_carbon_value(ingredients_list, items, items_carbon_values, serving_size)
                 quantity = extract_quantity(ing)
                 total_carbon_value += carbon_value * quantity
                 break
-    if serving_size >=4:
+    if serving_size >= 4:
         total_carbon_value /= serving_size
     if total_carbon_value >= 30:
         return "RED"
     else:
         return "GREEN"
+
 
 def process_ingredients(res, items, items_carbon_values):
     res_list = []
@@ -484,10 +542,13 @@ def process_ingredients(res, items, items_carbon_values):
         ingredients_list = []
         for ing in row["recipe"]["ingredientLines"]:
             ingredients_list.append(ing)
-        serving_size = row['recipe']['yield']
-        value = get_carbon_value(ingredients_list, items, items_carbon_values, serving_size)
+        serving_size = row["recipe"]["yield"]
+        value = get_carbon_value(
+            ingredients_list, items, items_carbon_values, serving_size
+        )
         res_list.append(value)
     return res_list
+
 
 # def get_carbon_value(ingredients_list, high_carbon_ingredients):
 #     # Define a regular expression pattern to extract ingredient names
@@ -512,6 +573,7 @@ def process_ingredients(res, items, items_carbon_values):
 #         return "RED"
 #     else:
 #         return "GREEN"
+
 
 def check_status(url):
     try:
@@ -542,24 +604,24 @@ items = [
     "Tofu",
 ]
 items_carbon_values = [
-    2,          # Avocado
-    27,         # Beef
-    13.5,       # Cheese
-    6.9,        # Chicken
-    19,         # Chocolate
-    16.5,       # Coffee
-    0.9,        # Corn
-    25.6,       # Lamb
-    25.6,       # Mutton
-    7.6,        # Palm Oil
-    12.1,       # Pork
-    3.9,        # Rapeseed Oil
-    11.8,       # Shrimp
-    1,          # Soy milk
-    6.2,        # Soybean Oil
-    2,          # Soybeans
-    3.5,        # Sunflower Oil
-    2,          # Tofu
+    2,  # Avocado
+    27,  # Beef
+    13.5,  # Cheese
+    6.9,  # Chicken
+    19,  # Chocolate
+    16.5,  # Coffee
+    0.9,  # Corn
+    25.6,  # Lamb
+    25.6,  # Mutton
+    7.6,  # Palm Oil
+    12.1,  # Pork
+    3.9,  # Rapeseed Oil
+    11.8,  # Shrimp
+    1,  # Soy milk
+    6.2,  # Soybean Oil
+    2,  # Soybeans
+    3.5,  # Sunflower Oil
+    2,  # Tofu
 ]
 
 if __name__ == "__main__":  # pragma no cover
