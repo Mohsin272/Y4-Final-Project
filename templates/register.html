@@ -1,4 +1,14 @@
 {% extends "base.html" %}
+<style>
+  .btn-with-icon {
+    display: inline-flex;
+    align-items: center;
+  }
+  .btn-with-icon span.material-icons {
+    margin-right: 4px;
+  }
+  
+</style>
 {% block body %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" >Macro Meals</a>
@@ -47,9 +57,15 @@
       {% for e in errors %}
       <p class="text-danger"> {{e}}</p>
       {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-success btn-with-icon btn-block mt-3">
+        <span class="material-icons">person_add</span>
+        Submit
+      </button>
     <br>
-    <p>Back to <a href="/login">Login</a></p>
+    <a href="/login" class="btn btn-secondary btn-with-icon btn-block mt-3">
+      <span class="material-icons">login</span>
+      Login
+    </a>
   </div>
   </form>
     </div>
