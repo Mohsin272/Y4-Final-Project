@@ -192,7 +192,7 @@
               >Get Instructions</a
             ><br />
             <form id="gpt-form-{{ loop.index }}" action="/gpt" method="post">
-              <input type="hidden" name="Ingredients" value="{{row['recipe']['ingredientLines']}}" />
+              <input type="hidden" name="Ingredients" value="{{row[2]}}" />
               <button type="submit" class="btn btn-outline-warning">Ask GPT</button>
           </form>
             
