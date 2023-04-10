@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, session, jsonify
+import os
+from flask import Flask, request, render_template, redirect, session, url_for
 import requests
 import secrets
 import DBcm
@@ -34,7 +35,7 @@ def deleteRecipe():
             SQL = """delete from saved_recipes where Username = %s and Link = %s"""
             data = (username, url)
             db.execute(SQL, data)
-        return redirect("/recipe")
+        return redirect("/savedRecipes")
     else:
         return redirect("/login")
 
@@ -104,8 +105,6 @@ def processreset():
     return render_template("changepw.html", title="Change Password", errors=errors)
 
 
-import os
-
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 # OAuth2 consumer configuration for Google
@@ -123,14 +122,14 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.profile",
         "openid",
     ],
-    redirect_url="/login/google/authorized",  # Update this line
+    redirect_to="google_authorized",  # Update this line
 )
 
 app.register_blueprint(google_bp, url_prefix="/login")
 
 
 @app.route("/login/google/authorized")
-def google_login():
+def google_authorized():
     if google.authorized:
         resp = google.get("/oauth2/v2/userinfo")
         if resp.ok:
@@ -144,13 +143,20 @@ def google_login():
 
             session["username"] = username
             session["email"] = email
+            session["logged_in"] = True
 
             return redirect("/recipe")
         else:
             return "Google login failed", 400
-    else:
-        return redirect(url_for("google.login"))
 
+    return redirect(url_for("google_login"))
+
+@app.route("/google-login")
+def google_login():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    else:
+        return redirect(url_for("google_authorized"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -190,7 +196,7 @@ def gpt():
     message_with_ingredients = message + "\n\n" + joined_ingredients
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": message_with_ingredients},],
+        messages=[{"role": "user", "content": message_with_ingredients}, ],
     )
     result = ""
     for choice in response.choices:
@@ -223,6 +229,7 @@ def addrecipe():
     Username = session.get("username", None)
     Email = session.get("email", None)
     Carbon = request.form.get("carbon")
+    Cost = request.form.get("cost")
 
     if Username and Email is not None:
         # Check if the recipe already exists
@@ -243,14 +250,14 @@ def addrecipe():
                     Protein_name, Protein_value, Protein_unit,
                     Sugars_name, Sugars_value, Sugars_unit,
                     Fiber_name, Fiber_value, Fiber_unit,
-                    Link, Label, Carbon
+                    Link, Label, Carbon, Cost
                     )
                     values
                     (%s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
-                    %s, %s, %s
+                    %s, %s, %s, %s
                     )
                 """
             db.execute(
@@ -279,6 +286,7 @@ def addrecipe():
                     Link,
                     Label,
                     Carbon,
+                    Cost,
                 ),
             )
         return redirect("/savedRecipes")
@@ -492,6 +500,7 @@ def process():
     #     value = get_carbon_value(ingredients_list, items)
     #     res_list.append(value)
     res_list = process_ingredients(res, items, items_carbon_values)
+    cost_list = process_costs(res, expensive, expensive_cost)
 
     accessible_recipes = []
     for row in res:
@@ -509,6 +518,7 @@ def process():
         meal=meal_type,
         ing=ingredients,
         health=health,
+        cost=cost_list
     )
 
 
@@ -549,6 +559,37 @@ def process_ingredients(res, items, items_carbon_values):
         res_list.append(value)
     return res_list
 
+def get_cost_value(ingredients_list, expensive, expensive_cost, serving_size):
+    total_cost_value = 0
+    for ing in ingredients_list:
+        for item, price in zip(expensive, expensive_cost):
+            if item.lower() in ing.lower():
+                quantity = extract_quantity(ing)
+                total_cost_value += price * quantity
+                break
+                    
+    if serving_size >= 4:
+        total_cost_value /= serving_size
+
+    if total_cost_value >= 100:  # Adjust this threshold for $$$
+        return "$$$"
+    elif total_cost_value >= 50:  # Adjust this threshold for $$
+        return "$$"
+    else:
+        return "$"
+
+def process_costs(res, expensive, expensive_cost):
+    res_list = []
+    for row in res:
+        ingredients_list = []
+        for ing in row["recipe"]["ingredientLines"]:
+            ingredients_list.append(ing)
+        serving_size = row["recipe"]["yield"]
+        value = get_cost_value(
+            ingredients_list, expensive, expensive_cost, serving_size
+        )
+        res_list.append(value)
+    return res_list
 
 # def get_carbon_value(ingredients_list, high_carbon_ingredients):
 #     # Define a regular expression pattern to extract ingredient names
@@ -602,6 +643,7 @@ items = [
     "Soybeans",
     "Sunflower Oil",
     "Tofu",
+    "Steak"
 ]
 items_carbon_values = [
     2,  # Avocado
@@ -622,6 +664,23 @@ items_carbon_values = [
     2,  # Soybeans
     3.5,  # Sunflower Oil
     2,  # Tofu
+    27,  # Steak
+]
+expensive=[
+    "Wagyu",
+    "Lobster",
+    "Truffle",
+    "Manuka Honey",
+    "Saffron",
+    "Caviar"
+]
+expensive_cost = [
+    300,  # Wagyu (per kg)
+    50,   # Lobster (per kg)
+    4000, # Truffle (per kg)
+    62,   # Manuka Honey (per kg)
+    3990 , # Saffron (per kg)
+    2100, # Caviar (per kg)
 ]
 
 if __name__ == "__main__":  # pragma no cover

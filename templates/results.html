@@ -174,7 +174,7 @@
 </div>
 <br />
 <div class="d-flex flex-wrap justify-content-evenly">
-  {% for row in data %} {% set val = cfv[loop.index0] if cfv else None %}
+  {% for row in data %} {% set val = cfv[loop.index0] if cfv else None %} {% set cost_val = cost[loop.index0] if cost else None %}
   <div class="d-flex flex-column position-relative border-0 card mb-5" style="width: 17rem">
     <img
       class="img-thumbnail"
@@ -196,6 +196,10 @@
           <div class="light green"></div>
           {% endif %}
         </div>
+        {% endif %}
+        {% if cost_val %}
+        <h5>Cost Estimation</h5>
+        <h6>{{cost_val}}</h6>
         {% endif %}
       </div>
     </div>
@@ -291,6 +295,7 @@
               Hidden fields to hold all recipe information so it can be called by the save recipe function
             -->
               <input type="hidden" name="carbon" value="{{val}}" />
+              <input type="hidden" name="cost" value="{{cost_val}}" />
               <input
                 type="hidden"
                 name="Ingredients"
