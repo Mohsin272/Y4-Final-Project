@@ -9,7 +9,6 @@ from appconfig import config
 import re
 import openai
 import secret
-from flask_dance.contrib.google import make_google_blueprint, google
 
 salt = bcrypt.gensalt()
 app = Flask(__name__)
@@ -52,22 +51,21 @@ def savedRecipes():
             "savedRecipes.html",
             title="Saved Recipe",
             res=res,
-            # heading="Your Saved Recipes",
         )
     else:
         return redirect("/login")
 
 
-@app.route("/dashboard")
-def dashboard():
-    # if "username" not in session:
-    #     return redirect("/login")
-    return render_template(
-        "edamam.html",
-        title=session["username"] + "'s Dashboard",
-        name=session["username"],
-        # heading="Welcome, " + session["username"],
-    )
+# @app.route("/dashboard")
+# def dashboard():
+#     # if "username" not in session:
+#     #     return redirect("/login")
+#     return render_template(
+#         "edamam.html",
+#         title=session["username"] + "'s Dashboard",
+#         name=session["username"],
+#         # heading="Welcome, " + session["username"],
+#     )
 
 
 @app.route("/logout")
@@ -104,59 +102,6 @@ def processreset():
         return redirect("/login")
     return render_template("changepw.html", title="Change Password", errors=errors)
 
-
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
-# OAuth2 consumer configuration for Google
-app.config[
-    "GOOGLE_OAUTH_CLIENT_ID"
-] = "29958200831-566b4muon1sof27uma9e1mq287q0p80c.apps.googleusercontent.com"
-app.config["GOOGLE_OAUTH_CLIENT_SECRET"] = "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"
-
-# Create Google OAuth2 blueprint
-google_bp = make_google_blueprint(
-    client_id=app.config["GOOGLE_OAUTH_CLIENT_ID"],
-    client_secret=app.config["GOOGLE_OAUTH_CLIENT_SECRET"],
-    scope=[
-        "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "openid",
-    ],
-    redirect_to="google_authorized",  # Update this line
-)
-
-app.register_blueprint(google_bp, url_prefix="/login")
-
-
-@app.route("/login/google/authorized")
-def google_authorized():
-    if google.authorized:
-        resp = google.get("/oauth2/v2/userinfo")
-        if resp.ok:
-            user_data = resp.json()
-            username = user_data["name"]
-            email = user_data["email"]
-
-            with DBcm.UseDatabase(config) as db:
-                SQL = """INSERT IGNORE INTO users (Username, Email) VALUES (%s, %s)"""
-                db.execute(SQL, (username, email))
-
-            session["username"] = username
-            session["email"] = email
-            session["logged_in"] = True
-
-            return redirect("/recipe")
-        else:
-            return "Google login failed", 400
-
-    return redirect(url_for("google_login"))
-
-@app.route("/google-login")
-def google_login():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
-    else:
-        return redirect(url_for("google_authorized"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -196,7 +141,7 @@ def gpt():
     message_with_ingredients = message + "\n\n" + joined_ingredients
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": message_with_ingredients}, ],
+        messages=[{"role": "user", "content": message_with_ingredients},],
     )
     result = ""
     for choice in response.choices:
@@ -209,21 +154,11 @@ def addrecipe():
     Ingredients = request.form.get("Ingredients").strip("[]")
     Calories = request.form.get("Calories")
     Servings = request.form.get("Servings")
-    Carbs_name = request.form.get("Carbs name")
     Carbs_value = request.form.get("Carbs value")
-    Carbs_unit = request.form.get("Carbs unit")
-    Fat_name = request.form.get("Fat name")
     Fat_value = request.form.get("Fat value")
-    Fat_unit = request.form.get("Fat unit")
-    Protein_name = request.form.get("Protein name")
     Protein_value = request.form.get("Protein value")
-    Protein_unit = request.form.get("Protein unit")
-    Sugars_name = request.form.get("Sugars name")
     Sugars_value = request.form.get("Sugars value")
-    Sugars_unit = request.form.get("Sugars unit")
-    Fiber_name = request.form.get("Fiber name")
     Fiber_value = request.form.get("Fiber value")
-    Fiber_unit = request.form.get("Fiber unit")
     Link = request.form.get("Link")
     Label = request.form.get("Label")
     Username = session.get("username", None)
@@ -245,17 +180,15 @@ def addrecipe():
             SQL = """
                     insert into saved_recipes
                     (Username, Email, Ingredients, Calories, Servings,
-                    Carbs_name, Carbs_value, Carbs_unit, 
-                    Fat_name, Fat_value, Fat_unit,
-                    Protein_name, Protein_value, Protein_unit,
-                    Sugars_name, Sugars_value, Sugars_unit,
-                    Fiber_name, Fiber_value, Fiber_unit,
+                    Carbs_value,
+                    Fat_value,
+                    Protein_value,
+                    Sugars_value,
+                    Fiber_value,
                     Link, Label, Carbon, Cost
                     )
                     values
                     (%s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s,
                     %s, %s, %s, %s
                     )
@@ -268,21 +201,11 @@ def addrecipe():
                     Ingredients,
                     Calories,
                     Servings,
-                    Carbs_name,
                     Carbs_value,
-                    Carbs_unit,
-                    Fat_name,
                     Fat_value,
-                    Fat_unit,
-                    Protein_name,
                     Protein_value,
-                    Protein_unit,
-                    Sugars_name,
                     Sugars_value,
-                    Sugars_unit,
-                    Fiber_name,
                     Fiber_value,
-                    Fiber_unit,
                     Link,
                     Label,
                     Carbon,
@@ -437,15 +360,12 @@ def sort_results():
     data = result.json()
     res = data["hits"]
     criteria = request.form["criteria"]
-
-    # Sort the results based on the given criteria
     res = sort_by_criteria(res, criteria)
 
     res_list = []
-    # Process the ingredients and get the carbon values
     res_list = process_ingredients(res, items, items_carbon_values)
+    cost_list = process_costs(res, expensive, expensive_cost)
 
-    # Return the sorted results in the same template as before
     return render_template(
         "results.html",
         title="Suggested Recipes ",
@@ -454,6 +374,7 @@ def sort_results():
         meal=meal_type,
         ing=ingredients,
         health=health,
+        cost=cost_list,
     )
 
 
@@ -490,15 +411,7 @@ def process():
         )
     data = result.json()
     res = data["hits"]
-
-    # ingredients_list = []
     res_list = []
-    # # Sample list of ingredients
-    # for row in res:
-    #     for ing in row["recipe"]["ingredientLines"]:
-    #         ingredients_list.append(ing)
-    #     value = get_carbon_value(ingredients_list, items)
-    #     res_list.append(value)
     res_list = process_ingredients(res, items, items_carbon_values)
     cost_list = process_costs(res, expensive, expensive_cost)
 
@@ -518,7 +431,7 @@ def process():
         meal=meal_type,
         ing=ingredients,
         health=health,
-        cost=cost_list
+        cost=cost_list,
     )
 
 
@@ -559,6 +472,7 @@ def process_ingredients(res, items, items_carbon_values):
         res_list.append(value)
     return res_list
 
+
 def get_cost_value(ingredients_list, expensive, expensive_cost, serving_size):
     total_cost_value = 0
     for ing in ingredients_list:
@@ -567,16 +481,17 @@ def get_cost_value(ingredients_list, expensive, expensive_cost, serving_size):
                 quantity = extract_quantity(ing)
                 total_cost_value += price * quantity
                 break
-                    
+
     if serving_size >= 4:
         total_cost_value /= serving_size
 
-    if total_cost_value >= 100:  # Adjust this threshold for $$$
-        return "$$$"
-    elif total_cost_value >= 50:  # Adjust this threshold for $$
-        return "$$"
+    if total_cost_value >= 50:
+        return "High Cost"
+    elif total_cost_value >= 25:
+        return "Average Cost"
     else:
-        return "$"
+        return "Low Cost"
+
 
 def process_costs(res, expensive, expensive_cost):
     res_list = []
@@ -590,30 +505,6 @@ def process_costs(res, expensive, expensive_cost):
         )
         res_list.append(value)
     return res_list
-
-# def get_carbon_value(ingredients_list, high_carbon_ingredients):
-#     # Define a regular expression pattern to extract ingredient names
-#     ingredient_pattern = re.compile(r"^\d*\s*(?:\d+\/\d+\s*)?(?:cup|tsp|tbsp)?\s*(.*)")
-
-#     # Extract ingredient names from the list
-#     ingredient_names = []
-#     for ingredient in ingredients_list:
-#         match = ingredient_pattern.match(ingredient)
-#         if match:
-#             ingredient_names.append(match.group(1).lower())  # Convert to lowercase
-
-#     # Count the number of matching ingredients
-#     matches = sum(
-#         1
-#         for ingredient in ingredient_names
-#         if any(match.lower() in ingredient for match in high_carbon_ingredients)
-#     )
-
-#     # Return a color code based on the total number of matching ingredients
-#     if matches >= 2:
-#         return "RED"
-#     else:
-#         return "GREEN"
 
 
 def check_status(url):
@@ -643,44 +534,39 @@ items = [
     "Soybeans",
     "Sunflower Oil",
     "Tofu",
-    "Steak"
+    "Steak",
+    "Prawn",
 ]
 items_carbon_values = [
     2,  # Avocado
-    27,  # Beef
-    13.5,  # Cheese
-    6.9,  # Chicken
+    60,  # Beef
+    21,  # Cheese
+    6,  # Chicken
     19,  # Chocolate
-    16.5,  # Coffee
-    0.9,  # Corn
-    25.6,  # Lamb
-    25.6,  # Mutton
-    7.6,  # Palm Oil
-    12.1,  # Pork
-    3.9,  # Rapeseed Oil
-    11.8,  # Shrimp
-    1,  # Soy milk
+    17,  # Coffee
+    1,  # Corn
+    24,  # Lamb
+    24,  # Mutton
+    8,  # Palm Oil
+    7,  # Pork
+    4,  # Rapeseed Oil
+    12,  # Shrimp
+    3,  # Soy milk
     6.2,  # Soybean Oil
-    2,  # Soybeans
+    1,  # Soybeans
     3.5,  # Sunflower Oil
     2,  # Tofu
-    27,  # Steak
+    60,  # Steak
+    12,  # Prawn
 ]
-expensive=[
-    "Wagyu",
-    "Lobster",
-    "Truffle",
-    "Manuka Honey",
-    "Saffron",
-    "Caviar"
-]
+expensive = ["Wagyu", "Lobster", "Truffle", "Manuka Honey", "Saffron", "Caviar"]
 expensive_cost = [
     300,  # Wagyu (per kg)
-    50,   # Lobster (per kg)
-    4000, # Truffle (per kg)
-    62,   # Manuka Honey (per kg)
-    3990 , # Saffron (per kg)
-    2100, # Caviar (per kg)
+    50,  # Lobster (per kg)
+    4000,  # Truffle (per kg)
+    62,  # Manuka Honey (per kg)
+    3990,  # Saffron (per kg)
+    2100,  # Caviar (per kg)
 ]
 
 if __name__ == "__main__":  # pragma no cover
