@@ -1,7 +1,20 @@
 {% extends "base.html" %}
 {% block body %}
 <style>
-/* Add a hover effect to the button */
+    body {
+    background: linear-gradient(to bottom, #89ffde 0%, #8f4bff 100%) no-repeat
+      fixed;
+    background: url("{{url_for('static', filename='bg.jpg')}}") no-repeat
+    /* Reference
+    https://www.pexels.com/photo/assorted-vegetables-on-brown-wooden-table-1414651/
+    */
+      center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+  }
 .btn:hover {
   transform: scale(1.1);
 }
@@ -14,13 +27,17 @@
   </button>
 </nav>
 <br><br><br>
-<div class="text-center">
-    <h1>Welcome to Macro Meals</h1>
-    <p>
-        A Web App to get personalised recipes on the go. 
-    </p>
-<a href="/login" class="btn btn-primary">Register/Login</a>
-<a href="/recipe" class="btn btn-success">Find a Recipe</a>
+<div class="text-center d-flex flex-column align-items-center">
+  <h1>Welcome to Macro Meals</h1>
+  <br>
+  <p class="text-lg">
+    Recipe Recommendation System with a Cost and Carbon Footprint Indicator and AI Suggestions. <br>
+    Offering a sustainable and personalised approach to meal planning.
+  </p>
+  <div class="d-flex justify-content-center">
+      <a href="/login" class="btn btn-primary">Register/Login</a>
+      <a href="/recipe" class="btn btn-success">Find a Recipe</a>
+  </div>
 </div>
 {% endblock %}
     

@@ -201,7 +201,7 @@
         <h5 class="card-title">{{row['recipe']['label']}}</h5>
         {% if val %}
         <br>
-        <h6>Carbon Footprint Indicator</h6>
+        <h5>Carbon Footprint Indicator</h5>
         <div class="traffic-light">
           {% if val == 'GREEN' %}
           <div class="light red"></div>
@@ -212,6 +212,7 @@
           {% endif %}
         </div>
         {% endif %}
+        <br>
         {% if cost_val %}
         <h5>Cost Estimation</h5>
         <h6>{{cost_val}}</h6>
