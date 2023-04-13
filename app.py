@@ -144,9 +144,14 @@ def gpt():
         messages=[{"role": "user", "content": message_with_ingredients},],
     )
     result = ""
+    print(response)
     for choice in response.choices:
-        result += choice.message.content
-    return render_template("gpt.html", title="GPT Results", result=result)
+        result = choice.message.content
+    print(result)
+    print(type(result))
+    output = re.split(r'(?<=\D)\s*-\s+', result)
+    output = [s.strip() for s in output if s.strip()]
+    return render_template("gpt.html", title="GPT Results", output=output)
 
 
 @app.route("/addrecipe", methods=["GET", "POST"])
