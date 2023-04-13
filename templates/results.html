@@ -75,6 +75,17 @@
       box-shadow: 0px 0px 5px #ff0, 0px 0px 10px #0f0, 0px 0px 15px #0f0;
     }
   }
+.alert-centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.alert-large {
+  font-size: 2.5rem;
+}
+
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <a class="navbar-brand">Macro Meals</a>
@@ -111,7 +122,11 @@
 </nav>
 <br />
 {% if not data%}
-<p class="text-center">Sorry no recipes found with your inputted ingredients</p>
+<div class="text-center alert-centered">
+  <div class="alert alert-warning alert-large" role="alert">
+    Sorry no recipes found with your inputted ingredients
+  </div>
+</div>
 {% else %}
 <div class="text-center"><h1>Your Personalised Recipes</h1>
   <div class="dropdown">
@@ -313,23 +328,8 @@
               />
               <input
                 type="hidden"
-                name="Carbs name"
-                value="{{row['recipe']['totalNutrients']['CHOCDF.net']['label']}}"
-              />
-              <input
-                type="hidden"
                 name="Carbs value"
                 value=" {{((row['recipe']['totalNutrients']['CHOCDF.net']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
-              />
-              <input
-                type="hidden"
-                name="Carbs unit"
-                value="{{row['recipe']['totalNutrients']['CHOCDF.net']['unit']}}"
-              />
-              <input
-                type="hidden"
-                name="Fat name"
-                value="{{row['recipe']['totalNutrients']['FAT']['label']}}"
               />
               <input
                 type="hidden"
@@ -338,28 +338,8 @@
               />
               <input
                 type="hidden"
-                name="Fat unit"
-                value="{{row['recipe']['totalNutrients']['FAT']['unit']}}"
-              />
-              <input
-                type="hidden"
-                name="Protein name"
-                value="{{row['recipe']['totalNutrients']['PROCNT']['label']}}"
-              />
-              <input
-                type="hidden"
                 name="Protein value"
                 value=" {{((row['recipe']['totalNutrients']['PROCNT']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
-              />
-              <input
-                type="hidden"
-                name="Protein unit"
-                value="{{row['recipe']['totalNutrients']['PROCNT']['unit']}}"
-              />
-              <input
-                type="hidden"
-                name="Sugars name"
-                value="{{row['recipe']['totalNutrients']['SUGAR']['label']}}"
               />
               <input
                 type="hidden"
@@ -368,23 +348,8 @@
               />
               <input
                 type="hidden"
-                name="Sugars unit"
-                value="{{row['recipe']['totalNutrients']['SUGAR']['unit']}}"
-              />
-              <input
-                type="hidden"
-                name="Fiber name"
-                value="{{row['recipe']['totalNutrients']['FIBTG']['label']}}"
-              />
-              <input
-                type="hidden"
                 name="Fiber value"
                 value=" {{((row['recipe']['totalNutrients']['FIBTG']['quantity'])|int / (row['recipe']['yield'])|int)|int}}"
-              />
-              <input
-                type="hidden"
-                name="Fiber unit"
-                value="{{row['recipe']['totalNutrients']['FIBTG']['unit']}}"
               />
               <input
                 type="hidden"

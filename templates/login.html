@@ -61,13 +61,6 @@
         Please enter an username.
       </div>
     </div>
-    <!-- <div class="mb-3">
-      <label for="emailID" class="form-label">Email</label>
-      <input type="email" class="form-control" id="emailID" name="email" required>
-      <div class="invalid-feedback">
-        Please enter your email.
-      </div>
-    </div> -->
     <div class="mb-3">
       <label for="passwordID" class="form-label">Password</label>
       <input type="password" class="form-control" id="passwordID" name="password" required>
@@ -83,11 +76,6 @@
           Login
         </button>
         <br>
-        <a href="{{ url_for('google.login') }}" class="btn btn-info btn-with-icon mt-3">
-          <span class="material-icons">account_circle</span>
-          Login with Google
-        </a>
-        <br>
         <a href="/register" class="btn btn-secondary btn-with-icon mt-3">
           <span class="material-icons">person_add</span>
           Register
@@ -98,15 +86,6 @@
           Reset Password
         </a>
       </div>
-        <!-- <button type="submit" class="btn btn-primary">Login</button>
-        <br>
-        <a href="{{ url_for('google.login') }}" class="btn btn-secondary">
-          <span class="material-icons" style="vertical-align: middle; margin-right: 5px;">account_circle</span>
-          Login with Google
-        </a>
-        <br>
-        <p>Not a member? <a href="/register">Register</a></p>
-        <p>Forgot Password? <a href="/passreset">Reset here</a></p> -->
       </div>
   </form>
     </div>

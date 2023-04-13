@@ -75,6 +75,17 @@
       box-shadow: 0px 0px 5px #ff0, 0px 0px 10px #0f0, 0px 0px 15px #0f0;
     }
   }
+.alert-centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.alert-large {
+  font-size: 2.5rem;
+}
+
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <a class="navbar-brand">Macro Meals</a>
@@ -104,7 +115,12 @@
   </div>
 </nav>
 {% if not res%}
-<p class="text-center">Sorry you have no Recipes Saved</p>
+<div class="text-center alert-centered">
+  <div class="alert alert-danger alert-large" role="alert">
+    Sorry, you have no Recipes Saved
+  </div>
+</div>
+<!-- <p class="text-center">Sorry you have no Recipes Saved</p> -->
 {% else %}
 <div class="text-center"><h1>Your Saved Recipes</h1></div>
 <br>
@@ -113,20 +129,20 @@
   <div class="d-flex flex-column position-relative border-0 card mb-5" style="width: 17rem">
     <div class="col-md-8 d-flex flex-grow-1">
       <div class="card-body d-flex flex-column">
-        <h5 class="card-title">{{row[21]}}</h5>
+        <h5 class="card-title">{{row[11]}}</h5>
         <br>
         <h6>Carbon Footprint Indicator</h6>
         <div class="traffic-light">
-          {% if row[22] == 'GREEN' %}
+          {% if row[12] == 'GREEN' %}
           <div class="light red"></div>
           <div class="light green activelightgreen"></div>
-          {% endif %} {% if row[22] == 'RED' %}
+          {% endif %} {% if row[12] == 'RED' %}
           <div class="light red activelightred"></div>
           <div class="light green"></div>
           {% endif %}
         </div>
         <h5>Cost Estimation</h5>
-        <h6>{{row[23]}}</h6>
+        <h6>{{row[13]}}</h6>
       </div>
     </div>
 
@@ -152,7 +168,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="itemModalLabel-{{ loop.index }}">
-              {{ row[21] }}
+              {{ row[11] }}
             </h5>
             <button
               type="button"
@@ -177,18 +193,18 @@
             <hr />
             <b>Nutritional Breakdown per serving:</b>
             <br />
-            {{row[5]}} {{(row[6])}} {{row[7]}}
+            Carbohydrates (net) {{(row[5])}} g
             <br />
-            {{row[8]}} {{(row[9])}} {{row[10]}}
+            Fat {{(row[6])}} g
             <br />
-            {{row[11]}} {{row[12]}} {{row[13]}}
+            Protein {{row[7]}} g
             <br />
-            {{row[14]}} {{row[15]}} {{row[16]}}
+            Sugars {{row[8]}} g
             <br />
-            {{row[17]}} {{row[18]}} {{row[19]}}
+            Fiber {{row[9]}} g
             <hr />
             <a
-              href="{{ row[20] }}"
+              href="{{ row[10] }}"
               target="_blank"
               class="btn btn-outline-success"
               >Get Instructions</a
@@ -201,7 +217,7 @@
             <br />
             <!--Session to store the link so it can be used for delete-->
             <form action="/deleteRecipe" method="post">
-              <input type="hidden" name="Link" value="{{ row[20] }}" />
+              <input type="hidden" name="Link" value="{{ row[10] }}" />
               <button type="submit" class="btn btn-danger">
                 Delete Recipe
               </button>
