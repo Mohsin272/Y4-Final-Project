@@ -83,7 +83,7 @@
 }
 
 .alert-large {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
 }
 
 </style>
@@ -176,10 +176,10 @@
           Sugar (High-Low)
         </button>
         <button class="dropdown-item" type="submit" name="criteria" value="fiberLH">
-          Fiber (Low-High)
+          Fibre (Low-High)
         </button>
         <button class="dropdown-item" type="submit" name="criteria" value="fiberHL">
-          Fiber (High-Low)
+          Fibre (High-Low)
         </button>
       </form>
     </div>
@@ -288,7 +288,7 @@
             (row['recipe']['yield'])|int)|int}}
             {{row['recipe']['totalNutrients']['SUGAR']['unit']}}
             <br />
-            {{row['recipe']['totalNutrients']['FIBTG']['label']}}
+            Fibre
             {{((row['recipe']['totalNutrients']['FIBTG']['quantity'])|int /
             (row['recipe']['yield'])|int)|int}}
             {{row['recipe']['totalNutrients']['FIBTG']['unit']}}
