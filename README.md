@@ -1,6 +1,6 @@
 # ![Macro Meals Logo](static/favicon.ico) Macro Meals
 
-## Personalized Meal Recommendations at Your Fingertips
+## Personalised Meal Recommendations at Your Fingertips
 
 Macro Meals is a user-friendly recipe recommendation system with a cost and carbon footprint indicator and AI suggestions.
 Offering a sustainable and personalised approach to meal planning.
