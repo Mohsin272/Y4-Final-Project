@@ -2,3 +2,6 @@ secret.py
 *.pyc
 tempCodeRunnerFile.py
 tempCodeRunnerFile.py
+__pycache__/
+instance/
+.webassets-cache
