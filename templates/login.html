@@ -69,7 +69,11 @@
       </div>
     </div>
     <div class="text-center">
-      <p class="text-danger"> {{errors}}</p>
+      {% if errors %}
+      <div class="alert alert-danger" role="alert">
+        {{errors}}
+      </div>
+    {% endif %}
       <div class="text-center">
         <button type="submit" class="btn btn-success btn-with-icon mt-3">
           <span class="material-icons">login</span>

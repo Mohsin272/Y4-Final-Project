@@ -83,9 +83,13 @@ margin-right: 4px;
       </div>
     </div>
     <div class="text-center">
-      {% for e in errors %}
-      <p class="text-danger"> {{e}}</p>
-      {% endfor %}
+      {% if errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for e in errors %}
+        {{e}} <br>
+        {% endfor %}
+      </div>
+      {% endif %}
       <button type="submit" class="btn btn-success btn-with-icon btn-block mt-3">
         <span class="material-icons">person_add</span>
         Submit

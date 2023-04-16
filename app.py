@@ -126,7 +126,7 @@ def login():
                 else:
                     errors = "Username/Password are incorrect"
             else:
-                errors = "User does not exist"
+                errors = "Username/Password are incorrect"
     return render_template("login.html", title="Welcome", errors=errors)
 
 
