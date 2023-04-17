@@ -1,10 +1,9 @@
 import os
-from flask import Flask, request, render_template, redirect, session, url_for
+from flask import Flask, request, render_template, redirect, session
 import requests
 import secrets
 import DBcm
 import bcrypt
-from concurrent.futures import ThreadPoolExecutor
 from appconfig import config
 import re
 import openai
@@ -47,25 +46,9 @@ def savedRecipes():
             SQL = """select * from saved_recipes where Username = %s"""
             db.execute(SQL, (username,))
             res = db.fetchall()
-        return render_template(
-            "savedRecipes.html",
-            title="Saved Recipe",
-            res=res,
-        )
+        return render_template("savedRecipes.html", title="Saved Recipe", res=res,)
     else:
         return redirect("/login")
-
-
-# @app.route("/dashboard")
-# def dashboard():
-#     # if "username" not in session:
-#     #     return redirect("/login")
-#     return render_template(
-#         "edamam.html",
-#         title=session["username"] + "'s Dashboard",
-#         name=session["username"],
-#         # heading="Welcome, " + session["username"],
-#     )
 
 
 @app.route("/logout")
@@ -144,12 +127,9 @@ def gpt():
         messages=[{"role": "user", "content": message_with_ingredients},],
     )
     result = ""
-    print(response)
     for choice in response.choices:
         result = choice.message.content
-    print(result)
-    print(type(result))
-    output = re.split(r'(?<=\D)\s*-\s+', result)
+    output = re.split(r"(?<=\D)\s*-\s+", result)
     output = [s.strip() for s in output if s.strip()]
     return render_template("gpt.html", title="GPT Results", output=output)
 
@@ -172,14 +152,12 @@ def addrecipe():
     Cost = request.form.get("cost")
 
     if Username and Email is not None:
-        # Check if the recipe already exists
         with DBcm.UseDatabase(config) as db:
             SQL = """SELECT * FROM saved_recipes WHERE Email = %s AND Link = %s"""
             db.execute(SQL, (Email, Link))
             existing_recipe = db.fetchone()
 
         if existing_recipe:
-            # If the recipe already exists, return a message
             return redirect("/savedRecipes")
         with DBcm.UseDatabase(config) as db:
             SQL = """
@@ -542,6 +520,7 @@ items = [
     "Steak",
     "Prawn",
 ]
+# Carbon values an items taken from https://ourworldindata.org/food-choice-vs-eating-local 
 items_carbon_values = [
     2,  # Avocado
     60,  # Beef
@@ -564,6 +543,7 @@ items_carbon_values = [
     60,  # Steak
     12,  # Prawn
 ]
+# Cost items taken from https://www.bbc.co.uk/programmes/articles/1LX0tn2vrN5Ls7RXcfb47rz/eight-of-the-world-s-most-expensive-foods 
 expensive = ["Wagyu", "Lobster", "Truffle", "Manuka Honey", "Saffron", "Caviar"]
 expensive_cost = [
     300,  # Wagyu (per kg)
