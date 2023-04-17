@@ -521,7 +521,7 @@ items = [
     "Steak",
     "Prawn",
 ]
-# Carbon values an items taken from https://ourworldindata.org/food-choice-vs-eating-local 
+# Carbon values an items taken from https://ourworldindata.org/food-choice-vs-eating-local
 items_carbon_values = [
     2,  # Avocado
     60,  # Beef
@@ -544,7 +544,7 @@ items_carbon_values = [
     60,  # Steak
     12,  # Prawn
 ]
-# Cost items taken from https://www.bbc.co.uk/programmes/articles/1LX0tn2vrN5Ls7RXcfb47rz/eight-of-the-world-s-most-expensive-foods 
+# Cost items taken from https://www.bbc.co.uk/programmes/articles/1LX0tn2vrN5Ls7RXcfb47rz/eight-of-the-world-s-most-expensive-foods
 expensive = ["Wagyu", "Lobster", "Truffle", "Manuka Honey", "Saffron", "Caviar"]
 expensive_cost = [
     300,  # Wagyu (per kg)
