@@ -1,0 +1,17 @@
+body {
+background: linear-gradient(to bottom, #89ffde 0%, #8f4bff 100%) no-repeat
+    fixed;
+background: url("bg.jpg") no-repeat
+/* Reference
+https://www.pexels.com/photo/assorted-vegetables-on-brown-wooden-table-1414651/
+*/
+    center center fixed;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+position: relative;
+}
+.btn:hover {
+  transform: scale(1.1);
+}

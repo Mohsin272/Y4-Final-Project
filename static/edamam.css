@@ -1,0 +1,15 @@
+body {
+    background: linear-gradient(to bottom, #89ffde 0%, #8f4bff 100%) no-repeat
+      fixed;
+    background: url("green.jpg") no-repeat
+      center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+  }
+  .dropdown {
+    width: 100%;
+    text-align: center;
+  }

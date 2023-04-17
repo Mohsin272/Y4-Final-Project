@@ -1,0 +1,18 @@
+body {
+background: linear-gradient(to bottom, #89ffde 0%, #8f4bff 100%) no-repeat
+    fixed;
+background: url("doodle.jpg") no-repeat
+    center center fixed;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+position: relative;
+}
+.btn-with-icon {
+display: inline-flex;
+align-items: center;
+}
+.btn-with-icon span.material-icons {
+margin-right: 4px;
+}
