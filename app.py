@@ -248,61 +248,61 @@ def edamam():
 
 def sort_by_criteria(res, criteria):
     if criteria == "caloriesLH":
-        return sorted(res, key=lambda r: r["recipe"]["calories"])
+        return sorted(res, key=lambda r: int(r["recipe"]["calories"]) / int(r["recipe"]["yield"]))
     elif criteria == "caloriesHL":
-        return sorted(res, key=lambda r: r["recipe"]["calories"], reverse=True)
+        return sorted(res, key=lambda r: int(r["recipe"]["calories"]) / int(r["recipe"]["yield"]), reverse=True)
     elif criteria == "servingLH":
         return sorted(res, key=lambda r: r["recipe"]["yield"])
     elif criteria == "servingHL":
         return sorted(res, key=lambda r: r["recipe"]["yield"], reverse=True)
     elif criteria == "carbsLH":
         return sorted(
-            res, key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"]
+            res, key=lambda r: int(r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"]) / int(r["recipe"]["yield"])
         )
     elif criteria == "carbsHL":
         return sorted(
             res,
-            key=lambda r: r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"],
+            key=lambda r: int(r["recipe"]["totalNutrients"]["CHOCDF.net"]["quantity"]) / int(r["recipe"]["yield"]),
             reverse=True,
         )
     elif criteria == "fatLH":
         return sorted(
-            res, key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"]
+            res, key=lambda r: int(r["recipe"]["totalNutrients"]["FAT"]["quantity"]) / int(r["recipe"]["yield"])
         )
     elif criteria == "fatHL":
         return sorted(
             res,
-            key=lambda r: r["recipe"]["totalNutrients"]["FAT"]["quantity"],
+            key=lambda r: int(r["recipe"]["totalNutrients"]["FAT"]["quantity"]) / int(r["recipe"]["yield"]),
             reverse=True,
         )
     elif criteria == "proteinLH":
         return sorted(
-            res, key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"]
+            res, key=lambda r:int(r["recipe"]["totalNutrients"]["PROCNT"]["quantity"]) / int(r["recipe"]["yield"])
         )
     elif criteria == "proteinHL":
         return sorted(
             res,
-            key=lambda r: r["recipe"]["totalNutrients"]["PROCNT"]["quantity"],
+            key=lambda r: int(r["recipe"]["totalNutrients"]["PROCNT"]["quantity"]) / int(r["recipe"]["yield"]),
             reverse=True,
         )
     elif criteria == "sugarLH":
         return sorted(
-            res, key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"]
+            res, key=lambda r: int(r["recipe"]["totalNutrients"]["SUGAR"]["quantity"]) / int(r["recipe"]["yield"])
         )
     elif criteria == "sugarHL":
         return sorted(
             res,
-            key=lambda r: r["recipe"]["totalNutrients"]["SUGAR"]["quantity"],
+            key=lambda r: int(r["recipe"]["totalNutrients"]["SUGAR"]["quantity"]) / int(r["recipe"]["yield"]),
             reverse=True,
         )
     elif criteria == "fiberLH":
         return sorted(
-            res, key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"]
+            res, key=lambda r: int(r["recipe"]["totalNutrients"]["FIBTG"]["quantity"]) / int(r["recipe"]["yield"])
         )
     elif criteria == "fiberHL":
         return sorted(
             res,
-            key=lambda r: r["recipe"]["totalNutrients"]["FIBTG"]["quantity"],
+            key=lambda r: int(r["recipe"]["totalNutrients"]["FIBTG"]["quantity"]) / int(r["recipe"]["yield"]),
             reverse=True,
         )
 
