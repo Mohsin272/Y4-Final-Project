@@ -8,10 +8,8 @@ Date - 17/04/23 -->
   let selectedVeggiesDiv = document.getElementById('selected-items');
   let clearSelectionsButton = document.getElementById('clear-selections');
 
-  // Hide the clear selections button initially
   clearSelectionsButton.style.display = 'none';
 
-  // Load the selected options from sessionStorage
   loadSelectedOptions();
 
   checkboxes.forEach(function (checkbox) {
@@ -45,7 +43,6 @@ Date - 17/04/23 -->
       clearSelectionsButton.style.display = 'none';
     }
 
-    // Save the selected options to sessionStorage
     saveSelectedOptions(selectedVeggies);
   }
 
